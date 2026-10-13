@@ -1,0 +1,592 @@
+TOTAL SLIDES: 38
+
+=== SLIDE 1 ===
+  PEMROGRAMAN
+  BERORIENTASI OBYEK
+  Pertemuan 4  •  Relasi Antarobjek
+  ASSOCIATION • DEPENDENCY •
+  AGGREGATION • COMPOSITION
+  Program Studi D3 Teknik Informatika
+  PENS PSDKU Sumenep
+  Nirwana Haidar Hari, S.Pd., M.Kom.
+  D3 Teknik Informatika
+  PENS PSDKU Sumenep
+
+=== SLIDE 2 ===
+  Capaian Pertemuan
+  Relasi antarobjek adalah dasar untuk membentuk model sistem yang konsisten dan dapat dikembangkan.
+  Menjelaskan mengapa object dalam sebuah sistem perlu saling berhubungan.
+  Membedakan association, dependency, aggregation, dan composition.
+  Menentukan multiplicity dan navigability pada relasi antarclass.
+  Menganalisis hubungan antarclass dari deskripsi permasalahan.
+  Memilih jenis relasi yang paling tepat untuk rancangan berorientasi obyek.
+  Merevisi model proyek berdasarkan relationship dan responsibility.
+  2
+
+=== SLIDE 3 ===
+  Review Pertemuan 3
+  Encapsulation membantu object menjaga state-nya sendiri.
+  Produk
+  – kode
+  – nama
+  – harga
+  – stok
+  + ubahHarga()
+  + tambahStok()
+  + kurangiStok()
+  Encapsulation
+  State internal dilindungi dan diubah melalui behavior.
+  Responsibility
+  Object bertanggung jawab menjaga konsistensi state miliknya.
+  “Pertanyaan berikutnya: bagaimana object yang sudah dirancang saling berkolaborasi?”
+  3
+
+=== SLIDE 4 ===
+  Mengapa Object Perlu Berhubungan?
+  Sistem nyata hampir tidak pernah terdiri dari satu object yang bekerja sendirian.
+  Pelanggan
+  memiliki identitas dan kebutuhan transaksi
+  Transaksi
+  mencatat pembelian dan total pembayaran
+  Produk
+  menyediakan harga dan menjaga stok
+  Pembayaran
+  menyelesaikan kewajiban transaksi
+  “Perangkat lunak OOP adalah jaringan object yang saling berinteraksi melalui hubungan yang memiliki makna.”
+  4
+
+=== SLIDE 5 ===
+  Peta Relasi Antarobjek
+  Empat relasi utama yang perlu dibedakan pada tahap awal desain.
+  Association
+  Hubungan struktural yang relatif stabil antara dua class.
+  Contoh: Mahasiswa — MataKuliah
+  Dependency
+  Satu class menggunakan class lain secara sementara.
+  Contoh: Laporan → Printer
+  Aggregation
+  Hubungan whole–part yang lemah; bagian masih dapat hidup sendiri.
+  Contoh: Tim ◇— Pemain
+  Composition
+  Whole–part yang kuat; lifecycle bagian bergantung pada whole.
+  Contoh: Order ◆— OrderItem
+  “Jangan memilih jenis relasi hanya karena simbol UML-nya terlihat berbeda. Pilih berdasarkan makna domain.”
+  5
+
+=== SLIDE 6 ===
+  Association
+  Hubungan ketika object dari satu class mengetahui atau berhubungan dengan object dari class lain.
+  Mahasiswa
+  – nrp
+  – nama
+  + ambilMK()
+  MataKuliah
+  – kodeMK
+  – namaMK
+  + tambahPeserta()
+  mengambil
+  Makna
+  Mahasiswa dan MataKuliah tetap merupakan entity berbeda, tetapi memiliki hubungan yang relevan di domain akademik.
+  6
+
+=== SLIDE 7 ===
+  Association Bukan Sekadar Garis
+  Relasi harus menjawab: hubungan apa yang sebenarnya terjadi di domain?
+  Relasi Lemah
+  “User menggunakan sistem” terlalu umum untuk dimodelkan sebagai association domain.
+  Relasi Bermakna
+  “Dokter menangani Pasien” memiliki makna domain dan dapat memengaruhi data/proses.
+  Relasi Struktural
+  “Pesanan memiliki Pelanggan” merupakan hubungan yang perlu diketahui dalam model.
+  “Setiap association idealnya memiliki alasan bisnis, bukan hanya karena dua class muncul dalam sistem yang sama.”
+  7
+
+=== SLIDE 8 ===
+  Navigability
+  Arah panah menunjukkan apakah satu class perlu mengetahui class lain.
+  Pesanan
+  – nomor
+  – tanggal
+  + getPelanggan()
+  Pelanggan
+  – id
+  – nama
+  mengetahui
+  Interpretasi
+  Pesanan perlu mengetahui Pelanggan. Tidak selalu berarti Pelanggan harus menyimpan daftar Pesanan.
+  8
+
+=== SLIDE 9 ===
+  Multiplicity
+  Berapa banyak object pada satu sisi yang dapat terhubung dengan object di sisi lain?
+  Pelanggan
+  – id
+  – nama
+  Pesanan
+  – nomor
+  – tanggal
+  1
+  0..*
+  “Satu pelanggan dapat memiliki nol atau banyak pesanan; satu pesanan dimiliki tepat satu pelanggan.”
+  9
+
+=== SLIDE 10 ===
+  Notasi Multiplicity
+  Multiplicity memaksa kita memperjelas aturan hubungan dalam domain.
+  1
+  Tepat satu
+  0..1
+  Nol atau satu
+  * / 0..*
+  Nol atau banyak
+  1..*
+  Minimal satu
+  2..5
+  Dua sampai lima
+  “Multiplicity bukan hiasan UML. Ia merepresentasikan business rule.”
+  10
+
+=== SLIDE 11 ===
+  Contoh Multiplicity
+  Departemen dan Mahasiswa.
+  Departemen
+  – kode
+  – nama
+  Mahasiswa
+  – nrp
+  – nama
+  1
+  1..*
+  Business Rule
+  Dalam model ini, satu mahasiswa harus berada pada satu departemen dan satu departemen memiliki minimal satu mahasiswa.
+  11
+
+=== SLIDE 12 ===
+  Self-Association
+  Sebuah class dapat berhubungan dengan object lain dari class yang sama.
+  Karyawan
+  – id
+  – nama
+  + setAtasan()
+  membawahi
+  Contoh lain
+  Kategori memiliki subkategori • Pegawai membimbing pegawai • Node memiliki parent node
+  Pertanyaan penting
+  Multiplicity tetap harus jelas: satu atasan dapat memiliki banyak bawahan.
+  12
+
+=== SLIDE 13 ===
+  Dependency
+  Satu class menggunakan class lain untuk melakukan suatu pekerjaan, tetapi hubungan tidak disimpan sebagai bagian state yang stabil.
+  Laporan
+  – judul
+  + cetak(Printer)
+  Printer
+  – nama
+  + print()
+  uses
+  Ciri Umum
+  Biasanya muncul sebagai parameter method, variabel lokal, atau pemanggilan service sementara.
+  13
+
+=== SLIDE 14 ===
+  Association vs Dependency
+  Perbedaannya terutama pada kestabilan dan kekuatan hubungan.
+  Aspek | Association | Dependency
+  Sifat | Relatif stabil | Sementara / penggunaan
+  Disimpan sebagai state? | Sering ya | Umumnya tidak
+  Contoh | Pesanan — Pelanggan | Laporan → Printer
+  Notasi UML | Garis solid | Garis putus-putus
+  Aspek
+  Association
+  Dependency
+  “Jika object A perlu menyimpan B sebagai bagian dari keadaan jangka panjang, association biasanya lebih tepat daripada dependency.”
+  14
+
+=== SLIDE 15 ===
+  Aggregation
+  Hubungan whole–part yang lemah: bagian dapat tetap ada tanpa whole tertentu.
+  Tim
+  – nama
+  + tambahPemain()
+  Pemain
+  – id
+  – nama
+  terdiri dari
+  Inti
+  Pemain dapat tetap eksis walaupun keluar dari Tim A dan bergabung ke Tim B. Lifecycle tidak bergantung pada tim tertentu.
+  15
+
+=== SLIDE 16 ===
+  Composition
+  Hubungan whole–part yang kuat: bagian dimiliki secara eksklusif dan lifecycle-nya bergantung pada whole.
+  Pesanan
+  – nomor
+  + tambahItem()
+  ItemPesanan
+  – qty
+  – harga
+  + subtotal()
+  terdiri dari
+  Inti
+  ItemPesanan tidak memiliki makna mandiri tanpa Pesanan tertentu. Jika pesanan dihapus, item di dalamnya ikut hilang.
+  16
+
+=== SLIDE 17 ===
+  Aggregation vs Composition
+  Pertanyaan kuncinya adalah ownership dan lifecycle.
+  Aggregation ◇
+  • Whole–part yang lemah
+  • Part dapat hidup sendiri
+  • Part dapat berpindah ownership
+  • Contoh: Tim ◇— Pemain
+  Composition ◆
+  • Whole–part yang kuat
+  • Part bergantung pada whole
+  • Ownership lebih eksklusif
+  • Contoh: Pesanan ◆— ItemPesanan
+  “Jangan memaksa aggregation/composition bila hubungan sebenarnya hanya association biasa.”
+  17
+
+=== SLIDE 18 ===
+  Lifecycle dalam Composition
+  Whole mengendalikan keberadaan part.
+  1. Buat Pesanan
+  Object Pesanan dibuat.
+  2. Tambah Item
+  ItemPesanan dibuat di dalam konteks Pesanan.
+  3. Proses
+  Pesanan dan item digunakan sebagai satu struktur.
+  4. Hapus Pesanan
+  ItemPesanan tidak lagi relevan.
+  “Lifecycle part adalah salah satu indikator paling kuat untuk membedakan composition dari aggregation.”
+  18
+
+=== SLIDE 19 ===
+  Has-a Relationship
+  Istilah “has-a” sering dipakai untuk menjelaskan bahwa sebuah object memiliki referensi ke object lain.
+  class Mobil {
+  private Mesin mesin;
+  }
+  Interpretasi
+  Mobil “has-a” Mesin. Namun kita masih perlu menentukan apakah relasinya association, aggregation, atau composition berdasarkan domain.
+  Peringatan
+  “Has-a” bukan jenis relasi UML yang terpisah. Ia adalah cara informal menjelaskan hubungan kepemilikan/referensi.
+  19
+
+=== SLIDE 20 ===
+  “Is-a” vs “Has-a”
+  Dua pertanyaan yang sering menentukan arah desain.
+  IS-A
+  Menunjukkan generalization / inheritance.
+  Contoh:
+  Mobil is-a Kendaraan.
+  Dosen is-a Pegawai.
+  HAS-A
+  Menunjukkan object memiliki atau menggunakan object lain.
+  Contoh:
+  Mobil has-a Mesin.
+  Pesanan has-a Pelanggan.
+  “Inheritance akan dibahas pada Pertemuan 5. Hari ini fokus pada hubungan antarobject.”
+  20
+
+=== SLIDE 21 ===
+  Ringkasan Notasi UML
+  Baca simbol sebagai makna desain, bukan sekadar dekorasi diagram.
+  Association
+  ────────
+  Garis solid
+  Dependency
+  - - - - - →
+  Garis putus-putus
+  Aggregation
+  ◇──────
+  Diamond kosong
+  Composition
+  ◆──────
+  Diamond terisi
+  “Tambahkan nama relasi, arah, dan multiplicity bila informasi tersebut penting untuk memahami model.”
+  21
+
+=== SLIDE 22 ===
+  Contoh Class Diagram: Perpustakaan
+  Satu model dapat memuat beberapa jenis relationship sekaligus.
+  Anggota
+  – id
+  – nama
+  + pinjam()
+  Peminjaman
+  – tglPinjam
+  – tglKembali
+  + hitungDenda()
+  Buku
+  – kode
+  – judul
+  + ubahStatus()
+  Petugas
+  – id
+  – nama
+  + proses()
+  memiliki
+  mencatat
+  memproses
+  1
+  0..*
+  1
+  22
+
+=== SLIDE 23 ===
+  Dari Narasi ke Relationship
+  Relasi ditemukan dari makna kalimat, aturan bisnis, dan ownership.
+  Narasi
+  “Seorang pelanggan dapat membuat banyak pesanan. Setiap pesanan terdiri dari satu atau lebih item pesanan. Saat mencetak invoice, sistem menggunakan printer.”
+  Interpretasi
+  Pelanggan — Pesanan
+  Association 1 : 0..*
+  Pesanan ◆— ItemPesanan
+  Composition 1 : 1..*
+  Invoice → Printer
+  Dependency
+  Pertanyaan
+  • Apakah hubungan stabil?
+  • Siapa memiliki siapa?
+  • Apakah part dapat hidup sendiri?
+  • Berapa jumlah object yang terlibat?
+  • Apakah hanya digunakan sementara?
+  23
+
+=== SLIDE 24 ===
+  Kesalahan Umum dalam Memodelkan Relasi
+  Diagram yang “ramai” belum tentu diagram yang baik.
+  Semua Class Dihubungkan
+  Membuat relasi hanya karena class berada dalam aplikasi yang sama.
+  Composition Berlebihan
+  Menganggap setiap “memiliki” sebagai composition tanpa memeriksa lifecycle.
+  Multiplicity Diabaikan
+  Tidak menjelaskan berapa object yang boleh terhubung.
+  Arah Tidak Perlu Jelas
+  Kedua class saling mengetahui tanpa kebutuhan nyata.
+  Relasi Menggantikan Responsibility
+  Semua behavior dipusatkan di satu class sehingga object lain hanya menjadi data.
+  24
+
+=== SLIDE 25 ===
+  Studi Kasus: Point of Sales
+  Identifikasi relasi dari domain yang sudah familiar.
+  Pelanggan
+  – id
+  – nama
+  Transaksi
+  – no
+  – tanggal
+  + hitungTotal()
+  DetailTransaksi
+  – qty
+  – harga
+  + subtotal()
+  Produk
+  – kode
+  – stok
+  + kurangiStok()
+  membuat
+  terdiri dari
+  mengacu
+  1
+  0..*
+  1
+  1..*
+  “Pertanyaan: apakah Pelanggan wajib ada pada setiap transaksi? Business rule akan menentukan multiplicity yang benar.”
+  25
+
+=== SLIDE 26 ===
+  Analisis Relationship pada POS
+  Satu domain dapat memiliki lebih dari satu jawaban valid, selama asumsi dijelaskan.
+  Relasi | Jenis yang mungkin | Alasan
+  Pelanggan — Transaksi | Association | Transaksi dapat dikaitkan dengan pelanggan.
+  Transaksi — DetailTransaksi | Composition | Detail hanya bermakna di dalam transaksi tertentu.
+  DetailTransaksi — Produk | Association | Detail merujuk produk yang tetap eksis di katalog.
+  Transaksi → PaymentGateway | Dependency | Gateway digunakan ketika proses pembayaran berlangsung.
+  Relasi
+  Jenis yang mungkin
+  Alasan
+  26
+
+=== SLIDE 27 ===
+  Studi Kasus: Sistem Akademik
+  Gunakan aturan bisnis untuk menentukan relationship.
+  Narasi
+  • Mahasiswa mengambil banyak mata kuliah.
+  • Satu mata kuliah dapat diambil banyak mahasiswa.
+  • Setiap kelas kuliah diajar satu dosen.
+  • Dosen menggunakan sistem notifikasi untuk mengirim pengumuman.
+  Calon Relasi
+  Mahasiswa — MataKuliah
+  Many-to-many association
+  KelasKuliah — Dosen
+  Many-to-one association
+  Dosen → NotificationService
+  Dependency
+  Diskusi
+  Apakah relasi Mahasiswa—MataKuliah sebaiknya langsung?
+  Atau diperlukan class Registrasi/KRS untuk menyimpan semester, status, dan nilai?
+  27
+
+=== SLIDE 28 ===
+  Latihan Kelas 1
+  Identifikasi jenis relasi dan multiplicity.
+  A. Rumah — Kamar
+  Apakah association, aggregation, atau composition? Mengapa?
+  B. Playlist — Lagu
+  Apakah lagu tetap dapat ada tanpa playlist tertentu?
+  C. Invoice → EmailService
+  Apakah service perlu disimpan sebagai state permanen?
+  D. Fakultas — Dosen
+  Tentukan multiplicity berdasarkan asumsi yang Anda gunakan.
+  E. Order — OrderItem
+  Apa yang terjadi pada item saat order dihapus?
+  28
+
+=== SLIDE 29 ===
+  Latihan Kelas 2 — Pilih Relasi yang Paling Tepat
+  Jelaskan alasan, bukan hanya menyebut simbol.
+  1.
+  Universitas memiliki Departemen.
+  2.
+  Dokumen menggunakan PDFExporter ketika diekspor.
+  3.
+  Mobil memiliki Mesin.
+  4.
+  Pelanggan memiliki banyak AlamatPengiriman.
+  5.
+  Tim memiliki Pemain.
+  6.
+  Menu memiliki MenuItem yang tidak bermakna di luar menu tersebut.
+  29
+
+=== SLIDE 30 ===
+  Prinsip Mendesain Relationship
+  Relasi yang baik mendukung responsibility, bukan menggantikannya.
+  1. Berdasarkan Domain
+  Hubungkan class karena ada makna bisnis yang nyata.
+  2. Minimum Knowledge
+  Object tidak perlu mengetahui lebih banyak dari yang diperlukan.
+  3. Ownership Jelas
+  Untuk whole–part, tentukan siapa yang memiliki dan mengendalikan lifecycle.
+  4. Multiplicity Jelas
+  Gunakan cardinality untuk menangkap aturan domain.
+  “Model yang baik bukan yang memiliki relasi paling banyak, tetapi yang memiliki relasi paling bermakna.”
+  30
+
+=== SLIDE 31 ===
+  Relationship dan Coupling
+  Semakin banyak object saling mengetahui detail satu sama lain, semakin tinggi ketergantungannya.
+  Low Coupling
+  Class berinteraksi melalui interface yang jelas dan hanya mengenal collaborator yang diperlukan.
+  High Coupling
+  Class mengetahui terlalu banyak object dan detail internalnya. Perubahan kecil dapat menyebar luas.
+  A
+  B
+  C
+  D
+  E
+  “Relasi yang tidak diperlukan adalah sumber coupling yang tidak diperlukan.”
+  31
+
+=== SLIDE 32 ===
+  Terlalu Banyak Koneksi = Desain Bermasalah?
+  Tidak selalu, tetapi ini sinyal untuk mengevaluasi responsibility.
+  Gejala
+  • Satu class terhubung ke hampir semua class
+  • Banyak dependency dua arah
+  • Class lain hanya berisi data
+  • Perubahan satu class memicu banyak perubahan lain
+  Pertanyaan Audit
+  • Apakah class terlalu banyak tanggung jawab?
+  • Apakah ada relationship yang tidak diperlukan?
+  • Apakah responsibility bisa dipindahkan?
+  Tujuan
+  Membangun kolaborasi antarobject dengan ketergantungan seminimal mungkin namun tetap merepresentasikan domain.
+  32
+
+=== SLIDE 33 ===
+  Project Based Learning — Milestone 3
+  Hubungkan class yang sudah Anda identifikasi pada P2–P3.
+  1. Identifikasi Relasi
+  Tentukan class mana yang benar-benar perlu berhubungan.
+  2. Tentukan Jenis
+  Association, dependency, aggregation, atau composition?
+  3. Multiplicity
+  Tuliskan 1, 0..1, 0..*, atau 1..* sesuai business rule.
+  4. Justifikasi
+  Berikan alasan desain untuk setiap relationship penting.
+  “Jangan menggambar UML terlebih dahulu. Pahami aturan domain, baru pilih simbol.”
+  33
+
+=== SLIDE 34 ===
+  Output Project P4
+  Dokumentasi sederhana tetapi dapat dipertanggungjawabkan.
+  Class A | Class B | Relationship | Multiplicity | Alasan
+  Pelanggan | Pesanan | Association | 1 : 0..* | Pelanggan dapat membuat banyak pesanan.
+  Pesanan | ItemPesanan | Composition | 1 : 1..* | Item hanya hidup dalam pesanan tertentu.
+  ... | ... | ... | ... | ...
+  Class A
+  Class B
+  Relationship
+  Multiplicity
+  Alasan
+  “Tambahkan class diagram sederhana yang konsisten dengan tabel relationship.”
+  34
+
+=== SLIDE 35 ===
+  Checklist Evaluasi Model
+  Gunakan sebelum mengumpulkan Milestone 3.
+  Setiap relationship memiliki alasan yang jelas dalam domain.
+  Multiplicity tidak bertentangan dengan aturan bisnis.
+  Composition hanya digunakan ketika lifecycle part benar-benar bergantung pada whole.
+  Dependency digunakan untuk penggunaan sementara, bukan state jangka panjang.
+  Arah hubungan tidak dibuat dua arah tanpa kebutuhan.
+  Tidak ada class yang terhubung ke hampir semua class tanpa tanggung jawab yang jelas.
+  Nama relationship menggunakan kata kerja yang mudah dipahami.
+  35
+
+=== SLIDE 36 ===
+  Takeaways
+  Relasi antarobjek adalah representasi struktur dan aturan kolaborasi dalam sistem.
+  Association
+  Hubungan struktural antarclass.
+  Dependency
+  Penggunaan sementara.
+  Aggregation
+  Whole–part lemah.
+  Composition
+  Whole–part kuat.
+  Multiplicity
+  Menyatakan jumlah object yang boleh terlibat dalam suatu hubungan.
+  Design Goal
+  Relasi secukupnya, responsibility jelas, coupling terkendali.
+  36
+
+=== SLIDE 37 ===
+  Exit Ticket
+  Jawab dalam 3–5 kalimat.
+  “Sebuah Playlist berisi Lagu. Jika playlist dihapus, lagu tetap tersedia di katalog musik. Relasi apa yang paling tepat antara Playlist dan Lagu? Jelaskan alasan dan multiplicity yang mungkin.”
+  Tujuan
+  Bukan mencari simbol yang “benar”, tetapi menunjukkan bahwa Anda memahami ownership, lifecycle, dan business rule.
+  37
+
+=== SLIDE 38 ===
+  Pertemuan Berikutnya
+  P5 — Inheritance dan Generalization
+  Topik
+  • Superclass dan subclass
+  • Is-a relationship
+  • Generalization
+  • Method overriding
+  • Kapan inheritance tepat digunakan?
+  Pertanyaan Utama
+  Apakah dua class yang memiliki attribute/method serupa selalu harus dihubungkan dengan inheritance?
+  Project Milestone
+  Evaluasi apakah ada generalization yang relevan pada model proyek tanpa memaksakan hierarki.
+  “Inheritance adalah alat desain, bukan mekanisme untuk sekadar menghindari penulisan kode berulang.”
+  38
+

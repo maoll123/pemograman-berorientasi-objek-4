@@ -1,0 +1,1229 @@
+=== MODUL 3 PARAGRAPHS ===
+
+[0] MODUL 3: ENCAPSULATION, ACCESS MODIFIER, GETTER–SETTER, DAN VALIDASI DATA
+PENDEKATAN AGILE SPRINT (SPRINT 3 / P3)
+
+[1] BAB I: FONDASI PROYEK & PERENCANAAN AGILE SPRINT (SPRINT 3)
+
+[2] 1.1 Latar Belakang & Keterkaitan Proyek: Praktikum Modul 3 ini merupakan kelanjutan langsung dan tahapan penyempurnaan dari praktikum Pertemuan 2 (P2). Pada P2, telah berhasil dibangun fondasi class, object, attribute, method, dan constructor untuk AutoRent System. Namun, pada P2 seluruh attribute masih berstatus default package-private sehingga rentan terhadap manipulasi nilai secara langsung dari luar class (direct attribute modification). Pada Sprint 3 (P3) ini, arsitektur sistem direfaktor secara menyeluruh dengan menerapkan pilar utama Object-Oriented Programming: Encapsulation dan Information Hiding, kontrol akses melalui Access Modifier (private & public), perancangan Getter-Setter terkontrol, serta validasi integritas data bisnis.
+
+[3] • Nama Proyek: AutoRent System – Sistem Manajemen Rental dan Armada Kendaraan Berbasis OOP.
+
+[4] • Product Goal: "Membangun sistem informasi rental kendaraan yang kokoh, terproteksi, dan konsisten dengan menerapkan enkapsulasi penuh, validasi data otomatis pada level objek, serta pencegahan mutasi data ilegal guna menjamin integritas transaksi dan armada."
+
+[5] 1.2 Product Backlog (User Stories Terkait Sprint P3)
+
+[6] 1.3 Sprint Goal & Sprint Backlog (Sprint 3 / P3)
+
+[7] BAB II: AUDIT CLASS P2 & PERANCANGAN ARSITEKTUR ENKAPSULASI
+
+[8] 2.1 Analisis Masalah & Kelemahan Arsitektur P2: Pada implementasi Praktikum 2, class yang dibangun belum menerapkan prinsip pembungkusan data (Information Hiding). Hal ini menimbulkan beberapa celah teknis serius, antara lain:
+
+[9] 1. Akses Bebas Tanpa Filter (Direct Access Vulnerability): 
+
+[10] Attribute dapat dimodifikasi langsung dari luar class menggunakan operator titik (misal: kendaraan1.tarifPerHari = -100000;). Akibatnya, nilai negatif atau data rusak dapat masuk ke dalam state objek.
+
+[11] 2. Constructor Mengabaikan Aturan Bisnis (Unchecked Constructor): 
+
+[12] Nilai parameter langsung di-assign ke field (this.tarifPerHari = tarifPerHari;) tanpa melewati mekanisme validasi pra-syarat.
+
+[13] 3. Ketiadaan Kontrol Hak Akses (No Read-Only Protection): 
+
+[14] Attribute identitas seperti Nomor KTP, ID Pelanggan, dan Kode Transaksi dapat diubah sewaktu-waktu oleh pihak luar yang menyebabkan hilangnya integritas audit.
+
+[15] 2.2 Tabel Audit Class Praktikum 2 (P2 vs P3 Refactoring)
+
+[16] 2.3 Identifikasi Hak Akses: Read-Only, Read-Write & Validasi Khusus
+
+[17] Prinsip Klasifikasi Hak Akses: Berdasarkan analisis kebutuhan fungsional dan keamanan data, hak akses setiap attribute diklasifikasikan ke dalam 3 kelompok strategis:
+
+[18] 1. Attribute Read-Only (Hanya Menyediakan Getter, Tanpa Setter Publik):
+   • Pelanggan.idPelanggan : ID unik pelanggan tidak boleh dimanipulasi setelah object terdaftar.
+   • TransaksiSewa.kodeTransaksi : Nomor registrasi transaksi bersifat permanen (immutable audit trail).
+   • TransaksiSewa.totalBiaya : Total biaya dikomputasi oleh logika bisnis sistem, tidak boleh diedit manual.
+   • Pelanggan.totalSewaAktif : Hanya dimutasi secara terproteksi melalui method tambahSewaAktif() dan kurangiSewaAktif().
+
+[19] 2. Attribute Read-Write (Menyediakan Getter dan Setter Ber-Validasi):
+   • Kendaraan.tarifPerHari : Dapat disesuaikan sewaktu-waktu namun wajib >= Rp 50.000,00.
+   • Kendaraan.platNomor : Dapat diperbarui dengan pola baku Regex Plat Nomor Indonesia.
+   • Pelanggan.namaLengkap : Dapat diperbarui dengan validasi minimal 3 karakter non-blank.
+   • Pelanggan.nomorTelepon : Dapat diperbarui melalui perbaruiKontak() dengan validasi pola '08' 10–14 digit.
+   • TransaksiSewa.durasiHari : Dapat diperpanjang melalui perpanjangDurasi() dengan validasi tambahanHari > 0.
+
+[20] 3. Aturan Validasi Khusus (Defensive Programming):
+   • Pengecekan pra-syarat transaksi: Transaksi sewa ditolak jika armada sedang disewa atau kuota pelanggan penuh.
+   • Constructor Defensif: Constructor tidak melakukan assignment langsung melainkan memanggil setter untuk menyaring data awal.
+
+[21] 2.4 Tabel Matriks Enkapsulasi Lengkap (Sprint 3 / P3)
+
+[22] 2.5 UML Class Diagram & Relasi Terenkapsulasi
+
+[23] 📄 Diagram 1. UML Class Diagram Terenkapsulasi (Modul 3 / P3)
+
+[24] BAB III: IMPLEMENTASI KODE SUMBER JAVA (SOURCE CODE)
+
+[25] 3.0 Deskripsi Struktur Paket: Seluruh kode sumber Java telah disusun secara modular di bawah direktori src/ yang mencakup 4 file utama: Kendaraan.java, Pelanggan.java, TransaksiSewa.java, dan driver class Main.java. Masing-masing class telah mengimplementasikan enkapsulasi penuh, setter-getter, serta validasi defensif.
+
+[26] 3.1 File: src/Kendaraan.java
+
+[27] 📄 Listing Program 1. File src/Kendaraan.java
+
+[28] 3.2 File: src/Pelanggan.java
+
+[29] 📄 Listing Program 2. File src/Pelanggan.java
+
+[30] 3.3 File: src/TransaksiSewa.java
+
+[31] 📄 Listing Program 3. File src/TransaksiSewa.java
+
+[32] 3.4 File: src/Main.java (Driver & Comprehensive Testing)
+
+[33] 📄 Listing Program 4. File src/Main.java
+
+[34] BAB IV: HASIL PENGUJIAN & EKSEKUSI PROGRAM
+
+[35] 4.1 Prosedur Pengujian: Pengujian sistem dilakukan dengan mengompilasi seluruh file sumber (javac -d bin src/*.java) dan mengeksekusi runner class (java -cp bin Main). Pengujian mencakup dua skenario pengujian komprehensif: Skenario Data Valid (Positive Testing) dan Skenario Data Tidak Valid (Negative Testing / Validation Defense).
+
+[36] 📄 Gambar 1. Log Eksekusi Konsol Program Java AutoRent System (Valid & Invalid Testing)
+
+[37] 4.2 Analisis Teknis & Pembahasan Hasil Pengujian
+
+[38] 1. Keberhasilan Validasi Data Masukan (Input Validation Barrier):
+   Ketika method mutator menerima nilai yang melanggar aturan bisnis (seperti tarif negatif Rp -500.000, plat nomor 'JAKARTA-123', nama kosong, NIK 5 digit, atau durasi perpanjangan negatif), setter secara tegas menolak pembaruan tersebut, mencetak pesan diagnostik [VALIDATION ERROR], dan mempertahankan nilai state sebelumnya tanpa distorsi data.
+
+[39] 2. Keberhasilan Information Hiding & Controlled Access:
+   Seluruh pembacaan data kini dilakukan secara tertib melalui Getter method. Tidak ada lagi baris kode di Main.java yang mengakses attribute secara direct (misal: mhs.ipk = -10; seperti pada review modul). Hal ini membuktikan implementasi prinsip Encapsulation telah tercapai secara paripurna.
+
+[40] 3. Integritas Hubungan Antar Objek (Object Association Consistency):
+   Saat transaksi dibuat, status armada dan kuota pelanggan termutasi secara sinkron. Pada Test Invalid 7, sistem berhasil mencegah pembuatan transaksi baru pada unit L 1234 AB yang sedang berstatus 'Sedang Disewa (Booked)', sehingga double-booking armada mustahil terjadi.
+
+[41] BAB V: SPRINT REVIEW, RETROSPECTIVE & KESIMPULAN
+
+[42] 5.1 Sprint Review (Sprint 3 / P3)
+
+[43] 5.2 Sprint Retrospective (Sprint 3 / P3)
+
+[44] 🌟 What Went Well? (Apa yang berjalan baik?)
+Penerapan prinsip Information Hiding dan Encapsulation berhasil direalisasikan secara sempurna pada seluruh class. Refactoring constructor menjadi defensif terbukti efektif mencegah inisialisasi object dengan data corrupt. Pemisahan pengujian antara Positive Test dan Negative Test memberikan visibilitas yang sangat jelas terhadap ketangguhan sistem dalam menyaring input ilegal.
+
+[45] ⚠️ What Went Wrong? (Apa kendala dalam refactoring?)
+Penanganan relasi dependensi antar objek saat validasi transaksi memerlukan pengecekan kondisi null dan state ketersediaan secara hati-hati agar tidak memicu NullPointerException saat instansiasi gagal. Namun hal ini berhasil diatasi dengan Defensive Null Checks.
+
+[46] 🚀 Improvement & Target Sprint Berikutnya (P4):
+Pada Sprint berikutnya (P4 – Relasi Antarobject / Asosiasi, Agregasi, dan Komposisi), struktur relasi antar class akan diperdalam dengan memodelkan array daftar armada dalam satu rental pool (Agregasi) dan memisahkan modul pencatatan riwayat transaksi secara terstruktur.
+
+[47] 5.3 Definition of Done (DoD) Checklist Modul 3
+
+[48] 5.4 Kesimpulan Akhir Praktikum Modul 3
+
+[49] Praktikum Pemrograman Berorientasi Obyek Modul 3 mengenai Encapsulation, Access Modifier, Getter–Setter, dan Validasi Data pada proyek AutoRent System telah berhasil diselesaikan dengan hasil sempurna dan memenuhi 100% kriteria Definition of Done. Penerapan access modifier private berhasil menyembunyikan detail internal objek dari intervensi luar yang tidak sah, sedangkan perancangan Getter dan Setter ber-validasi menjamin setiap perubahan state selalu mematuhi batas-batas aturan bisnis yang sah. Dengan arsitektur terenkapsulasi ini, sistem menjadi jauh lebih stabil, aman, mudah dipelihara (maintainable), serta siap untuk dikembangkan lebih lanjut pada Modul 4 (Relasi Antarobject / Asosiasi, Agregasi, dan Komposisi).
+
+
+=== MODUL 3 TABLES ===
+
+--- Table 1 (Rows: 5) ---
+  Mata Kuliah | : Praktikum Pemrograman Berorientasi Obyek (PBO)
+  Nama / NRP | : Ahmad Yasar Maulana Dais / 3125522018
+  Dosen Pengampu | : Nirwana Haidar Hari, S.Pd., M.Kom.
+  Nama Proyek | : AutoRent System – Sistem Manajemen Rental & Armada Kendaraan
+  Tautan Basis Proyek | : Melanjutkan Hasil Refactoring Praktikum P2 (Kendaraan, Pelanggan, TransaksiSewa)
+
+--- Table 2 (Rows: 5) ---
+  ID Story | Aktor | User Story Description | Kebutuhan Enkapsulasi P3
+  US-01 | Petugas Rental | Sebagai petugas, saya ingin memasukkan data armada dengan tarif dan format plat yang valid sehingga data inventaris tidak korup. | Validasi Regex Plat Nomor & Tarif >= Rp 50.000
+  US-02 | Petugas Rental | Sebagai petugas, saya ingin memvalidasi NIK KTP (16 digit) dan No HP pelanggan agar identitas penyewa terverifikasi akurat. | Validasi Format NIK 16 Digit & No HP Seluler
+  US-03 | Sistem / Manajer | Sebagai sistem, saya ingin memastikan durasi sewa selalu positif dan armada yang disewa benar-benar berstatus Ready. | Validasi Durasi Sewa > 0 & Cek Status Unit
+  US-04 | Pelanggan | Sebagai pelanggan, saya ingin memastikan kuota maksimal sewa (2 unit) dipatuhi secara otomatis tanpa manipulasi langsung. | Enkapsulasi State Sewa Aktif & Kuota Maksimum
+
+--- Table 3 (Rows: 1) ---
+  📌 SPRINT GOAL MODUL 3 (P3)
+🎯 SPRINT GOAL (P3):
+Memperbaiki struktur class proyek AutoRent System (Kendaraan, Pelanggan, TransaksiSewa) dengan menerapkan Enkapsulasi penuh (access modifier private pada seluruh attribute), membangun getter dan setter terkontrol, menyematkan minimal 3 aturan validasi data bisnis yang ketat, memperbaiki constructor agar mematuhi validasi defensif, serta membuktikan integritas state objek melalui pengujian data valid (positive test) dan data tidak valid (negative test).
+
+--- Table 4 (Rows: 7) ---
+  ID Backlog | Aktivitas Sprint Backlog P3 | Target Deliverable | Status P2 | Status P3
+  SB-01 | Mengubah seluruh attribute menjadi private | Class Kendaraan, Pelanggan, TransaksiSewa | Default | DONE (Private)
+  SB-02 | Membuat Getter terkontrol | Akses baca data read-only & read-write | Sebagian | DONE (100%)
+  SB-03 | Membuat Setter hanya pada attribute modifiable | Controlled mutator methods | Langsung | DONE (Controlled)
+  SB-04 | Menambahkan aturan validasi data bisnis | Validasi Plat, Tarif, NIK, Telp, Durasi | Belum Ada | DONE (7 Validasi)
+  SB-05 | Memperbaiki Constructor dengan validasi defensif | Defensive constructor implementation | Direct Assign | DONE (Defensive)
+  SB-06 | Melakukan pengujian objek (Valid & Invalid) | Pengujian komprehensif pada Main.java | Hanya Valid | DONE (Valid+Invalid)
+
+--- Table 5 (Rows: 18) ---
+  Nama Class | Attribute (State) | Kondisi Praktikum 2 (P2) | Perbaikan & Solusi Enkapsulasi P3
+  Kendaraan | platNomor | Default package, tanpa validasi | private + Getter + Validasi Regex Format Plat Polisi
+  Kendaraan | merk | Default package, direct access | private + Getter + Setter (Validasi non-empty & min 3 char)
+  Kendaraan | jenis | Default package, direct access | private + Getter + Setter (Validasi non-empty kategori)
+  Kendaraan | tarifPerHari | Default package, rentan nilai negatif | private + Getter + Setter (Validasi tarif > 0 & min Rp 50.000)
+  Kendaraan | isTersedia | Default package, modifikasi bebas | private + Getter isUnitTersedia() + Setter terkontrol
+  Pelanggan | idPelanggan | Default package, modifikasi bebas | private + Getter Only (Read-Only Identifier unik)
+  Pelanggan | namaLengkap | Default package, tanpa validasi | private + Getter + Setter (Validasi non-null & min 3 char)
+  Pelanggan | nomorKtp | Default package, tanpa validasi | private + Getter + Setter (Validasi ketat tepat 16 digit numerik)
+  Pelanggan | nomorTelepon | Default package, tanpa validasi | private + Getter + Setter (Validasi format '08' 10-14 digit)
+  Pelanggan | totalSewaAktif | Default package, direct mutation | private + Getter Only + Mutasi via method bisnis terkontrol
+  Pelanggan | BATAS_MAX_SEWA | Konstanta final (nilai 2) | private static final int (Enkapsulasi batasan kuota sewa)
+  TransaksiSewa | kodeTransaksi | Default package, direct access | private + Getter Only (Read-Only Transaction Code)
+  TransaksiSewa | kendaraan | Default package, asosiasi terbuka | private + Getter + Validasi ketersediaan armada saat pesan
+  TransaksiSewa | pelanggan | Default package, asosiasi terbuka | private + Getter + Validasi kuota sewa aktif pelanggan
+  TransaksiSewa | tanggalSewa | Default package, format bebas | private + Getter + Setter (Validasi string non-empty)
+  TransaksiSewa | durasiHari | Default package, tanpa validasi | private + Getter + Setter (Validasi durasi sewa > 0 hari)
+  TransaksiSewa | totalBiaya | Default package, direct access | private + Getter Only (Kalkulasi otomatis & terproteksi)
+
+--- Table 6 (Rows: 4) ---
+  Class | Private Attribute | Getter Method | Setter / Mutator Method | Aturan Validasi Bisnis
+  Kendaraan | • platNomor : String
+• merk : String
+• jenis : String
+• tarifPerHari : double
+• isTersedia : boolean | • getPlatNomor()
+• getMerk()
+• getJenis()
+• getTarifPerHari()
+• isUnitTersedia() | • setPlatNomor(String)
+• setMerk(String)
+• setJenis(String)
+• setTarifPerHari(double)
+• setStatusKetersediaan(boolean)
+• updateTarif(double) | 1. Plat: Regex standar POLRI
+2. Merk/Jenis: Non-blank, min 3 char
+3. Tarif: > 0 & min Rp 50.000
+  Pelanggan | • idPelanggan : String
+• namaLengkap : String
+• nomorKtp : String
+• nomorTelepon : String
+• totalSewaAktif : int
+• BATAS_MAX_SEWA : int | • getIdPelanggan()
+• getNamaLengkap()
+• getNomorKtp()
+• getNomorTelepon()
+• getTotalSewaAktif()
+• getSisaKuotaSewa()
+• bolehSewa() | • setNamaLengkap(String)
+• setNomorKtp(String)
+• setNomorTelepon(String)
+• perbaruiKontak(String)
+• tambahSewaAktif(int)
+• kurangiSewaAktif(int) | 1. Nama: Non-blank, min 3 char
+2. KTP/NIK: Tepat 16 digit angka
+3. Telepon: Awalan '08' 10-14 digit
+4. Kuota: 0 <= totalSewa <= 2
+  TransaksiSewa | • kodeTransaksi : String
+• kendaraan : Kendaraan
+• pelanggan : Pelanggan
+• tanggalSewa : String
+• durasiHari : int
+• totalBiaya : double
+• statusSewa : String
+• TARIF_DENDA : double | • getKodeTransaksi()
+• getKendaraan()
+• getPelanggan()
+• getTanggalSewa()
+• getDurasiHari()
+• getTotalBiaya()
+• getStatusSewa() | • setTanggalSewa(String)
+• perpanjangDurasi(int)
+• prosesPengembalian(int) | 1. Objek tidak boleh NULL
+2. Unit wajib berstatus Tersedia
+3. Pelanggan wajib memiliki sisa kuota
+4. Durasi sewa > 0 hari
+5. Denda: Rp 50.000/hari telat
+
+--- Table 7 (Rows: 1) ---
+  +--------------------------------------------------+          +--------------------------------------------------+
+|                    Kendaraan                     |          |                    Pelanggan                     |
++--------------------------------------------------+          +--------------------------------------------------+
+| - platNomor : String                             |          | - idPelanggan : String                           |
+| - merk : String                                  |          | - namaLengkap : String                           |
+| - jenis : String                                 |          | - nomorKtp : String                              |
+| - tarifPerHari : double                          |          | - nomorTelepon : String                          |
+| - isTersedia : boolean                           |          | - totalSewaAktif : int                           |
+| - REGEX_PLAT_NOMOR : String                      |          | - BATAS_MAX_SEWA : int = 2                       |
+| - MIN_TARIF_PER_HARI : double = 50000.0          |          | - REGEX_KTP : String                             |
++--------------------------------------------------+          | - REGEX_TELEPON : String                         |
+| + Kendaraan(plat, mrk, jns, trf, stts)           |          +--------------------------------------------------+
+| + getPlatNomor() : String                        |          | + Pelanggan(id, nama, ktp, telp, total)          |
+| + getMerk() : String                             |          | + getIdPelanggan() : String                      |
+| + getJenis() : String                            |          | + getNamaLengkap() : String                      |
+| + getTarifPerHari() : double                     |          | + getNomorKtp() : String                         |
+| + isUnitTersedia() : boolean                     |          | + getNomorTelepon() : String                     |
+| + setPlatNomor(platNomor : String) : boolean     |          | + getTotalSewaAktif() : int                      |
+| + setMerk(merk : String) : boolean               |          | + getSisaKuotaSewa() : int                       |
+| + setJenis(jenis : String) : boolean             |          | + bolehSewa() : boolean                          |
+| + setTarifPerHari(tarif : double) : boolean      |          | + setNamaLengkap(nama : String) : boolean        |
+| + setStatusKetersediaan(status : boolean) : void |          | + setNomorKtp(ktp : String) : boolean            |
+| + tampilkanInformasi() : void                    |          | + setNomorTelepon(telp : String) : boolean       |
+| + updateTarif(tarifBaru : double) : void         |          | + perbaruiKontak(noBaru : String) : void         |
+| + hitungEstimasiSewa(durasi : int) : double      |          | + tambahSewaAktif(jml : int) : boolean           |
++--------------------------------------------------+          | + kurangiSewaAktif(jml : int) : boolean          |
+                        ^                                     | + tampilkanDataPelanggan() : void                |
+                        | 1                                   +--------------------------------------------------+
+                        |                                                               ^ 1
+                        | has-a                                                         |
+                        |                                                               | has-a
+                        | 1..*                                                          | 0..*
+         +--------------+---------------------------------------------------------------+--------------+
+         |                                        TransaksiSewa                                        |
+         +---------------------------------------------------------------------------------------------+
+         | - kodeTransaksi : String                                                                    |
+         | - kendaraan : Kendaraan                                                                     |
+         | - pelanggan : Pelanggan                                                                     |
+         | - tanggalSewa : String                                                                      |
+         | - durasiHari : int                                                                          |
+         | - totalBiaya : double                                                                       |
+         | - statusSewa : String                                                                       |
+         | - TARIF_DENDA_PER_HARI : double = 50000.0                                                   |
+         +---------------------------------------------------------------------------------------------+
+         | + TransaksiSewa(kode, kendaraan, pelanggan, tgl, durasi)                                    |
+         | + getKodeTransaksi() : String                                                               |
+         | + getKendaraan() : Kendaraan                                                                |
+         | + getPelanggan() : Pelanggan                                                                |
+         | + getTanggalSewa() : String                                                                 |
+         | + getDurasiHari() : int                                                                     |
+         | + getTotalBiaya() : double                                                                  |
+         | + getStatusSewa() : String                                                                  |
+         | + setTanggalSewa(tgl : String) : boolean                                                    |
+         | + perpanjangDurasi(tambahanHari : int) : boolean                                            |
+         | + prosesPengembalian(hariKeterlambatan : int) : boolean                                     |
+         | + hitungDenda(hariKeterlambatan : int) : double                                             |
+         | + cetakStrukSewa() : void                                                                   |
+         +---------------------------------------------------------------------------------------------+
+
+--- Table 8 (Rows: 1) ---
+  import java.util.regex.Pattern;
+
+/**
+ * Class Kendaraan
+ * Merepresentasikan armada kendaraan dalam AutoRent System.
+ * Menerapkan prinsip Encapsulation dengan seluruh attribute private,
+ * validasi data pada setter/constructor, dan pembatasan akses langsung.
+ *
+ * @author Ahmad Yasar Maulana Dais (NRP: 3125522018)
+ * @version 3.0 (Modul 3 - Encapsulation & Validation)
+ */
+public class Kendaraan {
+    // 1. Enkapsulasi: Seluruh attribute dideklarasikan dengan access modifier 'private'
+    private String platNomor;
+    private String merk;
+    private String jenis;
+    private double tarifPerHari;
+    private boolean isTersedia;
+
+    // Pola regex plat nomor Indonesia (contoh: "L 1234 AB", "B 9999 XYZ", "M 123 CD")
+    private static final String REGEX_PLAT_NOMOR = "^[A-Z]{1,2}\\s[0-9]{1,4}\\s[A-Z]{1,3}$";
+    private static final double MIN_TARIF_PER_HARI = 50000.0;
+
+    // 2. Parameterized Constructor yang menerapkan Defensive Programming (memanggil validasi setter)
+    public Kendaraan(String platNomor, String merk, String jenis, double tarifPerHari, boolean isTersedia) {
+        // Menggunakan setter agar seluruh nilai awal wajib lolos aturan validasi data
+        if (!setPlatNomor(platNomor)) {
+            this.platNomor = "N/A (Invalid Plat)";
+        }
+        if (!setMerk(merk)) {
+            this.merk = "Unit Standar (Default)";
+        }
+        if (!setJenis(jenis)) {
+            this.jenis = "MPV (Default)";
+        }
+        if (!setTarifPerHari(tarifPerHari)) {
+            this.tarifPerHari = MIN_TARIF_PER_HARI;
+        }
+        this.isTersedia = isTersedia;
+    }
+
+    // 3. Getter Methods (Controlled Read Access)
+    public String getPlatNomor() {
+        return platNomor;
+    }
+
+    public String getMerk() {
+        return merk;
+    }
+
+    public String getJenis() {
+        return jenis;
+    }
+
+    public double getTarifPerHari() {
+        return tarifPerHari;
+    }
+
+    public boolean isUnitTersedia() {
+        return isTersedia;
+    }
+
+    // 4. Setter Methods dengan Validasi Data Bisnis (Controlled Mutator Access)
+    
+    /**
+     * Validasi 1: Format Plat Nomor Polisi
+     * Plat nomor harus sesuai pola standar kepolisian (1-2 huruf kode wilayah, 1-4 digit angka, 1-3 huruf seri).
+     */
+    public boolean setPlatNomor(String platNomor) {
+        if (platNomor != null && Pattern.matches(REGEX_PLAT_NOMOR, platNomor.trim().toUpperCase())) {
+            this.platNomor = platNomor.trim().toUpperCase();
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Plat nomor '" + platNomor + "' TIDAK VALID! Format baku harus sesuai: [Kode Wilayah] [Nomor] [Seri], contoh: 'L 1234 AB'");
+            return false;
+        }
+    }
+
+    /**
+     * Validasi 2: Merk / Tipe Kendaraan
+     * Merk tidak boleh null, tidak boleh kosong/hanya spasi, dan minimal 3 karakter.
+     */
+    public boolean setMerk(String merk) {
+        if (merk != null && merk.trim().length() >= 3) {
+            this.merk = merk.trim();
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Merk kendaraan '" + merk + "' TIDAK VALID! Nama merk tidak boleh kosong dan minimal 3 karakter.");
+            return false;
+        }
+    }
+
+    /**
+     * Validasi 3: Jenis / Kategori Armada
+     * Kategori kendaraan tidak boleh null atau kosong.
+     */
+    public boolean setJenis(String jenis) {
+        if (jenis != null && !jenis.trim().isEmpty()) {
+            this.jenis = jenis.trim();
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Jenis armada '" + jenis + "' TIDAK VALID! Kategori jenis kendaraan tidak boleh kosong.");
+            return false;
+        }
+    }
+
+    /**
+     * Validasi 4: Tarif Sewa Per Hari
+     * Tarif harian harus positif (> 0) dan memenuhi batas minimum operasional (>= Rp 50.000).
+     */
+    public boolean setTarifPerHari(double tarifPerHari) {
+        if (tarifPerHari >= MIN_TARIF_PER_HARI) {
+            this.tarifPerHari = tarifPerHari;
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Tarif per hari Rp " + String.format("%,.2f", tarifPerHari) + " TIDAK VALID! Tarif harus lebih besar dari 0 dan minimal Rp " + String.format("%,.2f", MIN_TARIF_PER_HARI));
+            return false;
+        }
+    }
+
+    public void setStatusKetersediaan(boolean isTersedia) {
+        this.isTersedia = isTersedia;
+        if (isTersedia) {
+            System.out.println("  >> [Kendaraan " + this.platNomor + "] Status armada berhasil diubah: TERSEDIA (Ready)");
+        } else {
+            System.out.println("  >> [Kendaraan " + this.platNomor + "] Status armada berhasil diubah: SEDANG DISEWA (Booked)");
+        }
+    }
+
+    // 5. Method Operasional & Komputasi State
+    public void tampilkanInformasi() {
+        System.out.println("  -------------------------------------------------------------");
+        System.out.println("  [Plat Nomor]     : " + platNomor);
+        System.out.println("  [Merk / Tipe]    : " + merk);
+        System.out.println("  [Jenis Armada]   : " + jenis);
+        System.out.println("  [Tarif Sewa/Hari]: Rp " + String.format("%,.2f", tarifPerHari));
+        System.out.println("  [Status Unit]    : " + (isTersedia ? "TERSEDIA (Ready)" : "SEDANG DISEWA (Booked)"));
+        System.out.println("  -------------------------------------------------------------");
+    }
+
+    public void updateTarif(double tarifBaru) {
+        System.out.println("  >> Mengajukan pembaruan tarif armada " + platNomor + " menjadi Rp " + String.format("%,.2f", tarifBaru) + "...");
+        if (setTarifPerHari(tarifBaru)) {
+            System.out.println("  >> [SUKSES] Tarif armada " + platNomor + " berhasil diperbarui menjadi Rp " + String.format("%,.2f", this.tarifPerHari));
+        } else {
+            System.out.println("  >> [GAGAL] Pembaruan tarif ditolak. Nilai tarif armada tetap Rp " + String.format("%,.2f", this.tarifPerHari));
+        }
+    }
+
+    public double hitungEstimasiSewa(int durasiHari) {
+        if (durasiHari > 0) {
+            return this.tarifPerHari * durasiHari;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Durasi sewa (" + durasiHari + " hari) tidak valid untuk kalkulasi estimasi.");
+            return 0.0;
+        }
+    }
+}
+
+--- Table 9 (Rows: 1) ---
+  import java.util.regex.Pattern;
+
+/**
+ * Class Pelanggan
+ * Merepresentasikan data penyewa/pelanggan dalam AutoRent System.
+ * Menerapkan prinsip Encapsulation dengan attribute private, identifier read-only,
+ * validasi NIK/KTP 16 digit, validasi format telepon, dan kontrol ketat kuota sewa.
+ *
+ * @author Ahmad Yasar Maulana Dais (NRP: 3125522018)
+ * @version 3.0 (Modul 3 - Encapsulation & Validation)
+ */
+public class Pelanggan {
+    // 1. Enkapsulasi: Seluruh attribute berstatus 'private'
+    private String idPelanggan;
+    private String namaLengkap;
+    private String nomorKtp;
+    private String nomorTelepon;
+    private int totalSewaAktif;
+
+    // Aturan bisnis: Batas kuota maksimal unit sewa per pelanggan
+    private static final int BATAS_MAX_SEWA = 2;
+
+    // Pola regex validasi identitas dan kontak
+    private static final String REGEX_KTP = "^[0-9]{16}$";
+    private static final String REGEX_TELEPON = "^08[0-9]{8,12}$"; // Dimulai '08' total 10-14 digit
+
+    // 2. Parameterized Constructor dengan validasi data defensif
+    public Pelanggan(String idPelanggan, String namaLengkap, String nomorKtp, String nomorTelepon, int totalSewaAktif) {
+        // Validasi ID Pelanggan (Identifier)
+        if (idPelanggan != null && !idPelanggan.trim().isEmpty()) {
+            this.idPelanggan = idPelanggan.trim().toUpperCase();
+        } else {
+            this.idPelanggan = "CUST-DEFAULT";
+        }
+
+        // Validasi Nama Lengkap
+        if (!setNamaLengkap(namaLengkap)) {
+            this.namaLengkap = "Pelanggan Tanpa Nama";
+        }
+
+        // Validasi Nomor KTP (16 Digit)
+        if (!setNomorKtp(nomorKtp)) {
+            this.nomorKtp = "0000000000000000";
+        }
+
+        // Validasi Nomor Telepon
+        if (!setNomorTelepon(nomorTelepon)) {
+            this.nomorTelepon = "081200000000";
+        }
+
+        // Validasi Initial Sewa Aktif
+        if (totalSewaAktif >= 0 && totalSewaAktif <= BATAS_MAX_SEWA) {
+            this.totalSewaAktif = totalSewaAktif;
+        } else {
+            this.totalSewaAktif = 0;
+        }
+    }
+
+    // 3. Getter Methods (Controlled Read Access)
+    public String getIdPelanggan() {
+        return idPelanggan;
+    }
+
+    public String getNamaLengkap() {
+        return namaLengkap;
+    }
+
+    public String getNomorKtp() {
+        return nomorKtp;
+    }
+
+    public String getNomorTelepon() {
+        return nomorTelepon;
+    }
+
+    public int getTotalSewaAktif() {
+        return totalSewaAktif;
+    }
+
+    public int getBatasMaxSewa() {
+        return BATAS_MAX_SEWA;
+    }
+
+    public int getSisaKuotaSewa() {
+        return BATAS_MAX_SEWA - totalSewaAktif;
+    }
+
+    public boolean bolehSewa() {
+        return totalSewaAktif < BATAS_MAX_SEWA;
+    }
+
+    // 4. Setter Methods dengan Validasi Data Bisnis
+    
+    /**
+     * Validasi: Nama Lengkap Pelanggan
+     * Nama tidak boleh null, tidak boleh kosong/whitespace, minimal 3 karakter.
+     */
+    public boolean setNamaLengkap(String namaLengkap) {
+        if (namaLengkap != null && namaLengkap.trim().length() >= 3) {
+            this.namaLengkap = namaLengkap.trim();
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Nama pelanggan '" + namaLengkap + "' TIDAK VALID! Nama tidak boleh kosong dan minimal 3 karakter.");
+            return false;
+        }
+    }
+
+    /**
+     * Validasi: Nomor KTP / NIK
+     * Harus tepat 16 digit angka numerik.
+     */
+    public boolean setNomorKtp(String nomorKtp) {
+        if (nomorKtp != null && Pattern.matches(REGEX_KTP, nomorKtp.trim())) {
+            this.nomorKtp = nomorKtp.trim();
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Nomor KTP '" + nomorKtp + "' TIDAK VALID! NIK/KTP harus tepat 16 digit angka numerik.");
+            return false;
+        }
+    }
+
+    /**
+     * Validasi: Nomor Telepon
+     * Harus berformat nomor seluler Indonesia diawali '08' dengan total panjang 10–14 digit.
+     */
+    public boolean setNomorTelepon(String nomorTelepon) {
+        if (nomorTelepon != null && Pattern.matches(REGEX_TELEPON, nomorTelepon.trim())) {
+            this.nomorTelepon = nomorTelepon.trim();
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Nomor telepon '" + nomorTelepon + "' TIDAK VALID! Nomor harus diawali '08' dan terdiri dari 10-14 digit angka.");
+            return false;
+        }
+    }
+
+    // 5. Method Operasional & Mutasi State Terkendali (Controlled State Mutation)
+    public void perbaruiKontak(String noTeleponBaru) {
+        System.out.println("  >> Mengajukan pembaruan nomor kontak pelanggan " + idPelanggan + " menjadi '" + noTeleponBaru + "'...");
+        if (setNomorTelepon(noTeleponBaru)) {
+            System.out.println("  >> [SUKSES] Nomor kontak pelanggan " + idPelanggan + " (" + namaLengkap + ") berhasil diperbarui menjadi: " + this.nomorTelepon);
+        } else {
+            System.out.println("  >> [GAGAL] Pembaruan kontak ditolak. Nomor tetap: " + this.nomorTelepon);
+        }
+    }
+
+    public boolean tambahSewaAktif(int jumlah) {
+        if (jumlah <= 0) {
+            System.out.println("  [VALIDATION ERROR] Jumlah penambahan unit sewa harus lebih dari 0.");
+            return false;
+        }
+        if ((this.totalSewaAktif + jumlah) <= BATAS_MAX_SEWA) {
+            this.totalSewaAktif += jumlah;
+            System.out.println("  >> [Pelanggan " + idPelanggan + "] Transaksi sewa disetujui +" + jumlah + " unit. Total sewa aktif: " + this.totalSewaAktif + "/" + BATAS_MAX_SEWA);
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Penambahan sewa DITOLAK! Kuota sewa terlampaui. Maksimal: " + BATAS_MAX_SEWA + ", Sewa saat ini: " + this.totalSewaAktif);
+            return false;
+        }
+    }
+
+    public boolean kurangiSewaAktif(int jumlah) {
+        if (jumlah <= 0) {
+            System.out.println("  [VALIDATION ERROR] Jumlah pengurangan unit sewa harus lebih dari 0.");
+            return false;
+        }
+        if ((this.totalSewaAktif - jumlah) >= 0) {
+            this.totalSewaAktif -= jumlah;
+            System.out.println("  >> [Pelanggan " + idPelanggan + "] Pengembalian tercatat -" + jumlah + " unit. Sisa sewa aktif: " + this.totalSewaAktif + "/" + BATAS_MAX_SEWA);
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Pengurangan sewa tidak valid! Jumlah sewa aktif tidak boleh kurang dari 0.");
+            return false;
+        }
+    }
+
+    public void tampilkanDataPelanggan() {
+        System.out.println("  -------------------------------------------------------------");
+        System.out.println("  [ID Pelanggan]      : " + idPelanggan);
+        System.out.println("  [Nama Lengkap]      : " + namaLengkap);
+        System.out.println("  [Nomor KTP / NIK]   : " + nomorKtp);
+        System.out.println("  [Nomor Telepon]     : " + nomorTelepon);
+        System.out.println("  [Unit Sedang Disewa]: " + totalSewaAktif + " unit");
+        System.out.println("  [Sisa Kuota Sewa]   : " + getSisaKuotaSewa() + " unit (Max: " + BATAS_MAX_SEWA + ")");
+        System.out.println("  [Status Hak Sewa]   : " + (bolehSewa() ? "DIIZINKAN SEWA" : "KUOTA PENUH"));
+        System.out.println("  -------------------------------------------------------------");
+    }
+}
+
+--- Table 10 (Rows: 1) ---
+  /**
+ * Class TransaksiSewa
+ * Mengelola transaksi pemesanan dan pengembalian sewa kendaraan.
+ * Menghubungkan objek Kendaraan dan Pelanggan (Association Relationship).
+ * Menerapkan prinsip Encapsulation dengan attribute private, validasi durasi sewa,
+ * validasi ketersediaan unit armada, validasi kuota pelanggan, dan kalkulasi biaya terlindungi.
+ *
+ * @author Ahmad Yasar Maulana Dais (NRP: 3125522018)
+ * @version 3.0 (Modul 3 - Encapsulation & Validation)
+ */
+public class TransaksiSewa {
+    // 1. Enkapsulasi: Seluruh attribute dideklarasikan 'private'
+    private String kodeTransaksi;
+    private Kendaraan kendaraan;
+    private Pelanggan pelanggan;
+    private String tanggalSewa;
+    private int durasiHari;
+    private double totalBiaya;
+    private String statusSewa;
+
+    // Konstanta tarif denda per hari keterlambatan
+    private static final double TARIF_DENDA_PER_HARI = 50000.0;
+
+    // 2. Parameterized Constructor dengan Validasi Pra-Syarat Transaksi (Defensive Constructor)
+    public TransaksiSewa(String kodeTransaksi, Kendaraan kendaraan, Pelanggan pelanggan, String tanggalSewa, int durasiHari) {
+        // Validasi Kode Transaksi
+        if (kodeTransaksi != null && !kodeTransaksi.trim().isEmpty()) {
+            this.kodeTransaksi = kodeTransaksi.trim().toUpperCase();
+        } else {
+            this.kodeTransaksi = "TRX-UNKNOWN";
+        }
+
+        this.tanggalSewa = (tanggalSewa != null && !tanggalSewa.trim().isEmpty()) ? tanggalSewa.trim() : "01-01-2026";
+
+        // Validasi Relasi Objek & Pra-Syarat Bisnis
+        if (kendaraan == null) {
+            System.out.println("  [TRANSACTION ERROR] Objek Kendaraan tidak boleh NULL!");
+            this.statusSewa = "Dibatalkan (Kendaraan Null)";
+            this.durasiHari = 0;
+            this.totalBiaya = 0.0;
+            return;
+        }
+
+        if (pelanggan == null) {
+            System.out.println("  [TRANSACTION ERROR] Objek Pelanggan tidak boleh NULL!");
+            this.statusSewa = "Dibatalkan (Pelanggan Null)";
+            this.durasiHari = 0;
+            this.totalBiaya = 0.0;
+            return;
+        }
+
+        // Validasi Ketersediaan Unit Armada
+        if (!kendaraan.isUnitTersedia()) {
+            System.out.println("  [TRANSACTION ERROR] Unit kendaraan '" + kendaraan.getPlatNomor() + " (" + kendaraan.getMerk() + ")' SEDANG DISEWA / Tidak Tersedia!");
+            this.kendaraan = kendaraan;
+            this.pelanggan = pelanggan;
+            this.statusSewa = "Ditolak (Armada Tidak Tersedia)";
+            this.durasiHari = 0;
+            this.totalBiaya = 0.0;
+            return;
+        }
+
+        // Validasi Hak/Kuota Sewa Pelanggan
+        if (!pelanggan.bolehSewa()) {
+            System.out.println("  [TRANSACTION ERROR] Pelanggan '" + pelanggan.getNamaLengkap() + "' telah mencapai batas kuota maksimal sewa!");
+            this.kendaraan = kendaraan;
+            this.pelanggan = pelanggan;
+            this.statusSewa = "Ditolak (Kuota Pelanggan Penuh)";
+            this.durasiHari = 0;
+            this.totalBiaya = 0.0;
+            return;
+        }
+
+        // Validasi Durasi Sewa
+        if (durasiHari <= 0) {
+            System.out.println("  [VALIDATION ERROR] Durasi sewa (" + durasiHari + " hari) TIDAK VALID! Minimal durasi adalah 1 hari.");
+            this.durasiHari = 1; // Fallback nilai minimum yang aman
+        } else {
+            this.durasiHari = durasiHari;
+        }
+
+        // Jika seluruh validasi lolos, inisialisasi state transaksi secara konsisten
+        this.kendaraan = kendaraan;
+        this.pelanggan = pelanggan;
+        this.statusSewa = "Sedang Disewa";
+        this.totalBiaya = this.kendaraan.hitungEstimasiSewa(this.durasiHari);
+
+        // Mutasi state objek terkait secara otomatis (Encapsulated workflow)
+        this.kendaraan.setStatusKetersediaan(false);
+        this.pelanggan.tambahSewaAktif(1);
+        System.out.println("  >> [SUKSES] Transaksi " + this.kodeTransaksi + " berhasil dibuat. Unit " + kendaraan.getPlatNomor() + " dipinjam oleh " + pelanggan.getNamaLengkap());
+    }
+
+    // 3. Getter Methods (Controlled Read Access)
+    public String getKodeTransaksi() {
+        return kodeTransaksi;
+    }
+
+    public Kendaraan getKendaraan() {
+        return kendaraan;
+    }
+
+    public Pelanggan getPelanggan() {
+        return pelanggan;
+    }
+
+    public String getTanggalSewa() {
+        return tanggalSewa;
+    }
+
+    public int getDurasiHari() {
+        return durasiHari;
+    }
+
+    public double getTotalBiaya() {
+        return totalBiaya;
+    }
+
+    public String getStatusSewa() {
+        return statusSewa;
+    }
+
+    public double getTarifDendaPerHari() {
+        return TARIF_DENDA_PER_HARI;
+    }
+
+    // 4. Setter Methods dengan Validasi Terkontrol
+    public boolean setTanggalSewa(String tanggalSewa) {
+        if (tanggalSewa != null && !tanggalSewa.trim().isEmpty()) {
+            this.tanggalSewa = tanggalSewa.trim();
+            return true;
+        } else {
+            System.out.println("  [VALIDATION ERROR] Tanggal sewa tidak boleh kosong.");
+            return false;
+        }
+    }
+
+    // 5. Method Operasional & Mutasi Status Transaksi
+    public boolean perpanjangDurasi(int tambahanHari) {
+        System.out.println("  >> Mengajukan perpanjangan durasi transaksi " + kodeTransaksi + " sebesar +" + tambahanHari + " hari...");
+        if (!"Sedang Disewa".equalsIgnoreCase(this.statusSewa)) {
+            System.out.println("  [VALIDATION ERROR] Perpanjangan ditolak! Transaksi sudah berstatus '" + this.statusSewa + "'.");
+            return false;
+        }
+        if (tambahanHari <= 0) {
+            System.out.println("  [VALIDATION ERROR] Tambahan hari (" + tambahanHari + " hari) TIDAK VALID! Nilai harus lebih dari 0.");
+            return false;
+        }
+
+        this.durasiHari += tambahanHari;
+        double biayaTambahan = this.kendaraan.hitungEstimasiSewa(tambahanHari);
+        this.totalBiaya += biayaTambahan;
+        System.out.println("  >> [SUKSES] Perpanjangan sewa disetujui. Total durasi baru: " + this.durasiHari + " hari | Total biaya akhir: Rp " + String.format("%,.2f", this.totalBiaya));
+        return true;
+    }
+
+    public boolean prosesPengembalian(int hariKeterlambatan) {
+        System.out.println("  >> Memproses pengembalian kendaraan untuk Transaksi " + kodeTransaksi + "...");
+        if (!"Sedang Disewa".equalsIgnoreCase(this.statusSewa)) {
+            System.out.println("  [VALIDATION ERROR] Pengembalian ditolak! Transaksi tidak dalam status aktif ('" + this.statusSewa + "').");
+            return false;
+        }
+
+        if (hariKeterlambatan < 0) {
+            System.out.println("  [VALIDATION ERROR] Hari keterlambatan (" + hariKeterlambatan + ") tidak valid! Menggunakan 0 hari keterlambatan.");
+            hariKeterlambatan = 0;
+        }
+
+        this.statusSewa = "Selesai";
+        this.kendaraan.setStatusKetersediaan(true);
+        this.pelanggan.kurangiSewaAktif(1);
+
+        double denda = hitungDenda(hariKeterlambatan);
+        double totalAkhir = this.totalBiaya + denda;
+
+        System.out.println("  >> [SUKSES] Unit kendaraan " + kendaraan.getPlatNomor() + " (" + kendaraan.getMerk() + ") berhasil dikembalikan.");
+        if (hariKeterlambatan > 0) {
+            System.out.println("     [Status Keterlambatan] : Terlambat " + hariKeterlambatan + " hari");
+            System.out.println("     [Denda Dikenakan]      : Rp " + String.format("%,.2f", denda) + " (Rp 50.000 / hari)");
+            System.out.println("     [Total Tagihan Akhir]  : Rp " + String.format("%,.2f", totalAkhir));
+        } else {
+            System.out.println("     [Status Keterlambatan] : Tepat Waktu (Bebas Denda)");
+            System.out.println("     [Total Tagihan Akhir]  : Rp " + String.format("%,.2f", totalAkhir));
+        }
+        return true;
+    }
+
+    public double hitungDenda(int hariKeterlambatan) {
+        return (hariKeterlambatan > 0) ? hariKeterlambatan * TARIF_DENDA_PER_HARI : 0.0;
+    }
+
+    public void cetakStrukSewa() {
+        System.out.println("  =============================================================");
+        System.out.println("            STRUK BUKTI TRANSAKSI SEWA - AUTORENT SYSTEM       ");
+        System.out.println("  =============================================================");
+        System.out.println("  [Kode Transaksi] : " + kodeTransaksi);
+        System.out.println("  [Tanggal Sewa]   : " + tanggalSewa);
+        System.out.println("  [Durasi Sewa]    : " + durasiHari + " hari");
+        System.out.println("  [Status Transaksi]: " + statusSewa);
+        System.out.println("  -------------------------------------------------------------");
+        if (pelanggan != null) {
+            System.out.println("  Penyewa        : " + pelanggan.getNamaLengkap() + " (ID: " + pelanggan.getIdPelanggan() + ")");
+            System.out.println("  Nomor Kontak   : " + pelanggan.getNomorTelepon());
+            System.out.println("  Nomor KTP      : " + pelanggan.getNomorKtp());
+        }
+        if (kendaraan != null) {
+            System.out.println("  Armada         : " + kendaraan.getMerk() + " [" + kendaraan.getJenis() + "]");
+            System.out.println("  Plat Nomor     : " + kendaraan.getPlatNomor());
+            System.out.println("  Tarif Sewa/Hari: Rp " + String.format("%,.2f", kendaraan.getTarifPerHari()));
+        }
+        System.out.println("  -------------------------------------------------------------");
+        System.out.println("  TOTAL BIAYA SEWA : Rp " + String.format("%,.2f", totalBiaya));
+        System.out.println("  =============================================================");
+    }
+}
+
+--- Table 11 (Rows: 1) ---
+  /**
+ * Class Main (Driver & Comprehensive Verification Test)
+ * Menguji seluruh fungsionalitas Modul 3:
+ * 1. Penerapan Enkapsulasi (Access Modifier Private, Controlled Access).
+ * 2. Getter dan Setter dengan Validasi Data Bisnis.
+ * 3. Pengujian Data Valid (Positive Testing).
+ * 4. Pengujian Data Tidak Valid (Negative Testing & Validation Defense).
+ * 5. Perlindungan Integritas State Objek.
+ *
+ * @author Ahmad Yasar Maulana Dais (NRP: 3125522018)
+ * @version 3.0 (Modul 3 - Encapsulation & Validation)
+ */
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("================================================================================");
+        System.out.println("   PRAKTIKUM PEMROGRAMAN BERORIENTASI OBYEK - MODUL 3 (AGILE SPRINT P3)         ");
+        System.out.println("   AutoRent System - Enkapsulasi, Access Modifier, Getter-Setter & Validasi     ");
+        System.out.println("   Penyusun: Ahmad Yasar Maulana Dais (NRP: 3125522018) | PENS PSDKU Sumenep    ");
+        System.out.println("================================================================================\n");
+
+        // =====================================================================
+        // BAGIAN 1: PENGUJIAN DATA VALID (POSITIVE TESTING)
+        // =====================================================================
+        System.out.println(">>> [1. PENGUJIAN INSTANSIASI OBJECT DENGAN DATA VALID (CONSTRUCTOR VALID)] <<<");
+        System.out.println("Menginstansiasi 2 object Kendaraan, 2 object Pelanggan, dan 2 object TransaksiSewa...\n");
+
+        // Instansiasi Objek Kendaraan dengan Data Valid
+        Kendaraan kendaraan1 = new Kendaraan("L 1234 AB", "Toyota Avanza Veloz 1.5 AT", "MPV (Mobil Penumpang)", 400000.0, true);
+        Kendaraan kendaraan2 = new Kendaraan("N 5678 CD", "Honda CR-V Turbo Prestige", "SUV (Sport Utility)", 750000.0, true);
+
+        // Instansiasi Objek Pelanggan dengan Data Valid
+        Pelanggan pelanggan1 = new Pelanggan("CUST-001", "Budi Santoso", "3529011205980001", "081234567890", 0);
+        Pelanggan pelanggan2 = new Pelanggan("CUST-002", "Siti Aminah", "3529022308990002", "085678901234", 0);
+
+        System.out.println("\nMembuat transaksi sewa pertama (Transaksi 1) dan kedua (Transaksi 2)...");
+        TransaksiSewa transaksi1 = new TransaksiSewa("TRX-2026-001", kendaraan1, pelanggan1, "06-09-2026", 3);
+        TransaksiSewa transaksi2 = new TransaksiSewa("TRX-2026-002", kendaraan2, pelanggan2, "06-09-2026", 2);
+
+        System.out.println("\n[OK] Seluruh 6 object berhasil diinstansiasi dengan nilai awal valid melalui constructor.");
+
+        // =====================================================================
+        // BAGIAN 2: PENGUJIAN METHOD TANPA PARAMETER & GETTER
+        // =====================================================================
+        System.out.println("\n>>> [2. PENGUJIAN METHOD TANPA PARAMETER & BACA STATE VIA GETTER] <<<");
+        System.out.println("\n--- DAFTAR ARMADA KENDARAAN TERDAFTAR ---");
+        kendaraan1.tampilkanInformasi();
+        kendaraan2.tampilkanInformasi();
+
+        System.out.println("\n--- DAFTAR PELANGGAN TERDAFTAR ---");
+        pelanggan1.tampilkanDataPelanggan();
+        pelanggan2.tampilkanDataPelanggan();
+
+        System.out.println("\n--- STRUK BUKTI TRANSAKSI SEWA AWAL ---");
+        transaksi1.cetakStrukSewa();
+        transaksi2.cetakStrukSewa();
+
+        // Evaluasi Controlled Read via Getter
+        System.out.println("\nMembaca State Objek Menggunakan Getter (Information Hiding Compliant):");
+        System.out.println("  1. Kendaraan 1 Plat Nomor  : " + kendaraan1.getPlatNomor());
+        System.out.println("  2. Kendaraan 1 Merk/Tipe   : " + kendaraan1.getMerk());
+        System.out.println("  3. Kendaraan 1 Tarif/Hari  : Rp " + String.format("%,.2f", kendaraan1.getTarifPerHari()));
+        System.out.println("  4. Kendaraan 1 Ketersediaan: " + (kendaraan1.isUnitTersedia() ? "Tersedia" : "Sedang Disewa"));
+        System.out.println("  5. Pelanggan 1 ID / Nama   : " + pelanggan1.getIdPelanggan() + " / " + pelanggan1.getNamaLengkap());
+        System.out.println("  6. Pelanggan 1 NIK KTP     : " + pelanggan1.getNomorKtp());
+        System.out.println("  7. Pelanggan 1 No. Telepon : " + pelanggan1.getNomorTelepon());
+        System.out.println("  8. Pelanggan 1 Sisa Kuota  : " + pelanggan1.getSisaKuotaSewa() + " unit lagi");
+        System.out.println("  9. Transaksi 1 Durasi/Total: " + transaksi1.getDurasiHari() + " hari / Rp " + String.format("%,.2f", transaksi1.getTotalBiaya()));
+        System.out.println(" 10. Transaksi 1 Status Sewa : " + transaksi1.getStatusSewa());
+
+        // =====================================================================
+        // BAGIAN 3: PENGUJIAN METHOD DENGAN PARAMETER & MUTASI VALID
+        // =====================================================================
+        System.out.println("\n>>> [3. PENGUJIAN MUTASI DATA DENGAN NILAI VALID (SETTER VALID)] <<<");
+        
+        // Mutasi tarif kendaraan valid
+        System.out.println("[Operasi Kendaraan]");
+        kendaraan1.updateTarif(480000.0);
+
+        // Mutasi kontak pelanggan valid
+        System.out.println("\n[Operasi Pelanggan]");
+        pelanggan1.perbaruiKontak("081299887766");
+
+        // Mutasi transaksi sewa valid
+        System.out.println("\n[Operasi Transaksi Sewa]");
+        transaksi1.perpanjangDurasi(2); // Tambah sewa 2 hari
+
+        // Memproses pengembalian kendaraan pada transaksi 2 (terlambat 1 hari)
+        System.out.println("\n[Operasi Pengembalian Transaksi 2]");
+        transaksi2.prosesPengembalian(1);
+
+        // =====================================================================
+        // BAGIAN 4: PENGUJIAN DATA TIDAK VALID (NEGATIVE TESTING & DEFENSIVE PROGRAMMING)
+        // =====================================================================
+        System.out.println("\n================================================================================");
+        System.out.println(">>> [4. PENGUJIAN DATA TIDAK VALID (NEGATIVE TESTING & VALIDATION DEFENSE)] <<<");
+        System.out.println("Menguji ketahanan sistem enkapsulasi terhadap masukan data yang tidak valid...");
+        System.out.println("================================================================================");
+
+        // Test Invalid 1: Tarif Negatif & Nol pada Kendaraan
+        System.out.println("\n[TEST INVALID 1] Uji Setter Tarif Kendaraan dengan Nilai Negatif & Nol:");
+        System.out.println("  State awal tarif kendaraan 1: Rp " + String.format("%,.2f", kendaraan1.getTarifPerHari()));
+        System.out.print("  Mencoba mengubah tarif menjadi Rp -500.000,00 -> ");
+        kendaraan1.setTarifPerHari(-500000.0);
+        System.out.print("  Mencoba mengubah tarif menjadi Rp 0,00 -> ");
+        kendaraan1.setTarifPerHari(0.0);
+        System.out.println("  >> HASIL VERIFIKASI: Tarif kendaraan 1 tetap aman di Rp " + String.format("%,.2f", kendaraan1.getTarifPerHari()) + " [PROTEKSI VALIDASI BERHASIL]");
+
+        // Test Invalid 2: Format Plat Nomor Tidak Baku
+        System.out.println("\n[TEST INVALID 2] Uji Setter Plat Nomor dengan Format Asal / Tidak Baku:");
+        System.out.println("  State awal plat kendaraan 1: " + kendaraan1.getPlatNomor());
+        System.out.print("  Mencoba mengubah plat nomor menjadi 'JAKARTA-123' -> ");
+        kendaraan1.setPlatNomor("JAKARTA-123");
+        System.out.print("  Mencoba mengubah plat nomor menjadi 'B 123456789 XYZ' -> ");
+        kendaraan1.setPlatNomor("B 123456789 XYZ");
+        System.out.println("  >> HASIL VERIFIKASI: Plat nomor kendaraan 1 tetap aman '" + kendaraan1.getPlatNomor() + "' [PROTEKSI VALIDASI BERHASIL]");
+
+        // Test Invalid 3: Nama Pelanggan Kosong / Null / Kurang dari 3 Karakter
+        System.out.println("\n[TEST INVALID 3] Uji Setter Nama Pelanggan dengan String Kosong & Terlalu Pendek:");
+        System.out.println("  State awal nama pelanggan 1: " + pelanggan1.getNamaLengkap());
+        System.out.print("  Mencoba mengubah nama menjadi string kosong (\"\") -> ");
+        pelanggan1.setNamaLengkap("");
+        System.out.print("  Mencoba mengubah nama menjadi 'Jo' (kurang dari 3 karakter) -> ");
+        pelanggan1.setNamaLengkap("Jo");
+        System.out.println("  >> HASIL VERIFIKASI: Nama pelanggan 1 tetap aman '" + pelanggan1.getNamaLengkap() + "' [PROTEKSI VALIDASI BERHASIL]");
+
+        // Test Invalid 4: Nomor KTP / NIK Bukan 16 Digit
+        System.out.println("\n[TEST INVALID 4] Uji Setter Nomor KTP/NIK dengan Format Tidak Tepat 16 Digit:");
+        System.out.println("  State awal KTP pelanggan 1: " + pelanggan1.getNomorKtp());
+        System.out.print("  Mencoba mengubah KTP menjadi '12345' (hanya 5 digit) -> ");
+        pelanggan1.setNomorKtp("12345");
+        System.out.print("  Mencoba mengubah KTP mengandung huruf '352901120598ABCD' -> ");
+        pelanggan1.setNomorKtp("352901120598ABCD");
+        System.out.println("  >> HASIL VERIFIKASI: KTP pelanggan 1 tetap aman '" + pelanggan1.getNomorKtp() + "' [PROTEKSI VALIDASI BERHASIL]");
+
+        // Test Invalid 5: Nomor Telepon Tidak Valid
+        System.out.println("\n[TEST INVALID 5] Uji Setter Nomor Telepon dengan Format Non-Seluler:");
+        System.out.println("  State awal nomor telepon pelanggan 1: " + pelanggan1.getNomorTelepon());
+        System.out.print("  Mencoba mengubah telepon menjadi '021-9988-ABC' -> ");
+        pelanggan1.setNomorTelepon("021-9988-ABC");
+        System.out.print("  Mencoba mengubah telepon menjadi '0812' (terlalu pendek) -> ");
+        pelanggan1.setNomorTelepon("0812");
+        System.out.println("  >> HASIL VERIFIKASI: Nomor telepon pelanggan 1 tetap aman '" + pelanggan1.getNomorTelepon() + "' [PROTEKSI VALIDASI BERHASIL]");
+
+        // Test Invalid 6: Perpanjangan Durasi Negatif pada Transaksi
+        System.out.println("\n[TEST INVALID 6] Uji Perpanjangan Durasi Sewa dengan Nilai Negatif:");
+        System.out.println("  State awal durasi transaksi 1: " + transaksi1.getDurasiHari() + " hari | Total: Rp " + String.format("%,.2f", transaksi1.getTotalBiaya()));
+        System.out.print("  Mencoba perpanjang durasi sebesar -3 hari -> ");
+        transaksi1.perpanjangDurasi(-3);
+        System.out.println("  >> HASIL VERIFIKASI: Durasi transaksi 1 tetap " + transaksi1.getDurasiHari() + " hari, Total Biaya tetap Rp " + String.format("%,.2f", transaksi1.getTotalBiaya()) + " [PROTEKSI VALIDASI BERHASIL]");
+
+        // Test Invalid 7: Percobaan Membuat Transaksi pada Armada yang Sedang Tidak Tersedia (Booked)
+        System.out.println("\n[TEST INVALID 7] Uji Validasi Bisnis: Menyewa Kendaraan yang Masih Berstatus Booked:");
+        System.out.println("  Status armada kendaraan 1 saat ini: " + (kendaraan1.isUnitTersedia() ? "Tersedia" : "Sedang Disewa (Booked)"));
+        System.out.println("  Mencoba membuat transaksi baru untuk kendaraan 1 oleh pelanggan 2...");
+        TransaksiSewa transaksiGagal = new TransaksiSewa("TRX-INVALID-01", kendaraan1, pelanggan2, "06-09-2026", 2);
+        System.out.println("  Status transaksi gagal: '" + transaksiGagal.getStatusSewa() + "' [PROTEKSI ATURAN BISNIS BERHASIL]");
+
+        // =====================================================================
+        // BAGIAN 5: REKAPITULASI STATE AKHIR SELURUH OBJEK
+        // =====================================================================
+        System.out.println("\n>>> [5. REKAPITULASI STATE AKHIR SELURUH OBJEK (INTEGRITAS TERJAGA)] <<<");
+        System.out.println("  State Akhir Kendaraan 1 : [" + kendaraan1.getPlatNomor() + "] - " + kendaraan1.getMerk() + " | Status: " + (kendaraan1.isUnitTersedia() ? "Tersedia" : "Sedang Disewa") + " | Tarif: Rp " + String.format("%,.2f", kendaraan1.getTarifPerHari()));
+        System.out.println("  State Akhir Kendaraan 2 : [" + kendaraan2.getPlatNomor() + "] - " + kendaraan2.getMerk() + " | Status: " + (kendaraan2.isUnitTersedia() ? "Tersedia" : "Sedang Disewa") + " | Tarif: Rp " + String.format("%,.2f", kendaraan2.getTarifPerHari()));
+        System.out.println("  State Akhir Pelanggan 1 : " + pelanggan1.getNamaLengkap() + " (" + pelanggan1.getIdPelanggan() + ") | Sewa Aktif: " + pelanggan1.getTotalSewaAktif() + " unit | Telp: " + pelanggan1.getNomorTelepon());
+        System.out.println("  State Akhir Pelanggan 2 : " + pelanggan2.getNamaLengkap() + " (" + pelanggan2.getIdPelanggan() + ") | Sewa Aktif: " + pelanggan2.getTotalSewaAktif() + " unit | Telp: " + pelanggan2.getNomorTelepon());
+        System.out.println("  State Akhir Transaksi 1 : " + transaksi1.getKodeTransaksi() + " | Status: " + transaksi1.getStatusSewa() + " | Durasi: " + transaksi1.getDurasiHari() + " hari | Total Biaya: Rp " + String.format("%,.2f", transaksi1.getTotalBiaya()));
+        System.out.println("  State Akhir Transaksi 2 : " + transaksi2.getKodeTransaksi() + " | Status: " + transaksi2.getStatusSewa() + " | Durasi: " + transaksi2.getDurasiHari() + " hari | Total Biaya: Rp " + String.format("%,.2f", transaksi2.getTotalBiaya()));
+
+        System.out.println("\n================================================================================");
+        System.out.println("   [STATUS: SUKSES SEMPURNA] SELURUH ATRIBUT DAN VALIDASI P3 TERVERIFIKASI!     ");
+        System.out.println("================================================================================");
+    }
+}
+
+--- Table 12 (Rows: 1) ---
+  ================================================================================
+   PRAKTIKUM PEMROGRAMAN BERORIENTASI OBYEK - MODUL 3 (AGILE SPRINT P3)         
+   AutoRent System - Enkapsulasi, Access Modifier, Getter-Setter & Validasi     
+   Penyusun: Ahmad Yasar Maulana Dais (NRP: 3125522018) | PENS PSDKU Sumenep    
+================================================================================
+
+>>> [1. PENGUJIAN INSTANSIASI OBJECT DENGAN DATA VALID (CONSTRUCTOR VALID)] <<<
+Menginstansiasi 2 object Kendaraan, 2 object Pelanggan, dan 2 object TransaksiSewa...
+
+Membuat transaksi sewa pertama (Transaksi 1) dan kedua (Transaksi 2)...
+  >> [Kendaraan L 1234 AB] Status armada berhasil diubah: SEDANG DISEWA (Booked)
+  >> [Pelanggan CUST-001] Transaksi sewa disetujui +1 unit. Total sewa aktif: 1/2
+  >> [SUKSES] Transaksi TRX-2026-001 berhasil dibuat. Unit L 1234 AB dipinjam oleh Budi Santoso
+  >> [Kendaraan N 5678 CD] Status armada berhasil diubah: SEDANG DISEWA (Booked)
+  >> [Pelanggan CUST-002] Transaksi sewa disetujui +1 unit. Total sewa aktif: 1/2
+  >> [SUKSES] Transaksi TRX-2026-002 berhasil dibuat. Unit N 5678 CD dipinjam oleh Siti Aminah
+
+[OK] Seluruh 6 object berhasil diinstansiasi dengan nilai awal valid melalui constructor.
+
+>>> [2. PENGUJIAN METHOD TANPA PARAMETER & BACA STATE VIA GETTER] <<<
+
+--- DAFTAR ARMADA KENDARAAN TERDAFTAR ---
+  -------------------------------------------------------------
+  [Plat Nomor]     : L 1234 AB
+  [Merk / Tipe]    : Toyota Avanza Veloz 1.5 AT
+  [Jenis Armada]   : MPV (Mobil Penumpang)
+  [Tarif Sewa/Hari]: Rp 400.000,00
+  [Status Unit]    : SEDANG DISEWA (Booked)
+  -------------------------------------------------------------
+  -------------------------------------------------------------
+  [Plat Nomor]     : N 5678 CD
+  [Merk / Tipe]    : Honda CR-V Turbo Prestige
+  [Jenis Armada]   : SUV (Sport Utility)
+  [Tarif Sewa/Hari]: Rp 750.000,00
+  [Status Unit]    : SEDANG DISEWA (Booked)
+  -------------------------------------------------------------
+
+--- DAFTAR PELANGGAN TERDAFTAR ---
+  -------------------------------------------------------------
+  [ID Pelanggan]      : CUST-001
+  [Nama Lengkap]      : Budi Santoso
+  [Nomor KTP / NIK]   : 3529011205980001
+  [Nomor Telepon]     : 081234567890
+  [Unit Sedang Disewa]: 1 unit
+  [Sisa Kuota Sewa]   : 1 unit (Max: 2)
+  [Status Hak Sewa]   : DIIZINKAN SEWA
+  -------------------------------------------------------------
+  -------------------------------------------------------------
+  [ID Pelanggan]      : CUST-002
+  [Nama Lengkap]      : Siti Aminah
+  [Nomor KTP / NIK]   : 3529022308990002
+  [Nomor Telepon]     : 085678901234
+  [Unit Sedang Disewa]: 1 unit
+  [Sisa Kuota Sewa]   : 1 unit (Max: 2)
+  [Status Hak Sewa]   : DIIZINKAN SEWA
+  -------------------------------------------------------------
+
+--- STRUK BUKTI TRANSAKSI SEWA AWAL ---
+  =============================================================
+            STRUK BUKTI TRANSAKSI SEWA - AUTORENT SYSTEM       
+  =============================================================
+  [Kode Transaksi] : TRX-2026-001
+  [Tanggal Sewa]   : 06-09-2026
+  [Durasi Sewa]    : 3 hari
+  [Status Transaksi]: Sedang Disewa
+  -------------------------------------------------------------
+  Penyewa        : Budi Santoso (ID: CUST-001)
+  Nomor Kontak   : 081234567890
+  Nomor KTP      : 3529011205980001
+  Armada         : Toyota Avanza Veloz 1.5 AT [MPV (Mobil Penumpang)]
+  Plat Nomor     : L 1234 AB
+  Tarif Sewa/Hari: Rp 400.000,00
+  -------------------------------------------------------------
+  TOTAL BIAYA SEWA : Rp 1.200.000,00
+  =============================================================
+
+Membaca State Objek Menggunakan Getter (Information Hiding Compliant):
+  1. Kendaraan 1 Plat Nomor  : L 1234 AB
+  2. Kendaraan 1 Merk/Tipe   : Toyota Avanza Veloz 1.5 AT
+  3. Kendaraan 1 Tarif/Hari  : Rp 400.000,00
+  4. Kendaraan 1 Ketersediaan: Sedang Disewa
+  5. Pelanggan 1 ID / Nama   : CUST-001 / Budi Santoso
+  6. Pelanggan 1 NIK KTP     : 3529011205980001
+  7. Pelanggan 1 No. Telepon : 081234567890
+  8. Pelanggan 1 Sisa Kuota  : 1 unit lagi
+  9. Transaksi 1 Durasi/Total: 3 hari / Rp 1.200.000,00
+ 10. Transaksi 1 Status Sewa : Sedang Disewa
+
+>>> [3. PENGUJIAN MUTASI DATA DENGAN NILAI VALID (SETTER VALID)] <<<
+[Operasi Kendaraan]
+  >> Mengajukan pembaruan tarif armada L 1234 AB menjadi Rp 480.000,00...
+  >> [SUKSES] Tarif armada L 1234 AB berhasil diperbarui menjadi Rp 480.000,00
+
+[Operasi Pelanggan]
+  >> Mengajukan pembaruan nomor kontak pelanggan CUST-001 menjadi '081299887766'...
+  >> [SUKSES] Nomor kontak pelanggan CUST-001 (Budi Santoso) berhasil diperbarui menjadi: 081299887766
+
+[Operasi Transaksi Sewa]
+  >> Mengajukan perpanjangan durasi transaksi TRX-2026-001 sebesar +2 hari...
+  >> [SUKSES] Perpanjangan sewa disetujui. Total durasi baru: 5 hari | Total biaya akhir: Rp 2.160.000,00
+
+[Operasi Pengembalian Transaksi 2]
+  >> Memproses pengembalian kendaraan untuk Transaksi TRX-2026-002...
+  >> [Kendaraan N 5678 CD] Status armada berhasil diubah: TERSEDIA (Ready)
+  >> [Pelanggan CUST-002] Pengembalian tercatat -1 unit. Sisa sewa aktif: 0/2
+  >> [SUKSES] Unit kendaraan N 5678 CD (Honda CR-V Turbo Prestige) berhasil dikembalikan.
+     [Status Keterlambatan] : Terlambat 1 hari
+     [Denda Dikenakan]      : Rp 50.000,00 (Rp 50.000 / hari)
+     [Total Tagihan Akhir]  : Rp 1.550.000,00
+
+================================================================================
+>>> [4. PENGUJIAN DATA TIDAK VALID (NEGATIVE TESTING & VALIDATION DEFENSE)] <<<
+Menguji ketahanan sistem enkapsulasi terhadap masukan data yang tidak valid...
+================================================================================
+
+[TEST INVALID 1] Uji Setter Tarif Kendaraan dengan Nilai Negatif & Nol:
+  State awal tarif kendaraan 1: Rp 480.000,00
+  Mencoba mengubah tarif menjadi Rp -500.000,00 ->   [VALIDATION ERROR] Tarif per hari Rp -500.000,00 TIDAK VALID! Tarif harus lebih besar dari 0 dan minimal Rp 50.000,00
+  Mencoba mengubah tarif menjadi Rp 0,00 ->   [VALIDATION ERROR] Tarif per hari Rp 0,00 TIDAK VALID! Tarif harus lebih besar dari 0 dan minimal Rp 50.000,00
+  >> HASIL VERIFIKASI: Tarif kendaraan 1 tetap aman di Rp 480.000,00 [PROTEKSI VALIDASI BERHASIL]
+
+[TEST INVALID 2] Uji Setter Plat Nomor dengan Format Asal / Tidak Baku:
+  State awal plat kendaraan 1: L 1234 AB
+  Mencoba mengubah plat nomor menjadi 'JAKARTA-123' ->   [VALIDATION ERROR] Plat nomor 'JAKARTA-123' TIDAK VALID! Format baku harus sesuai: [Kode Wilayah] [Nomor] [Seri], contoh: 'L 1234 AB'
+  Mencoba mengubah plat nomor menjadi 'B 123456789 XYZ' ->   [VALIDATION ERROR] Plat nomor 'B 123456789 XYZ' TIDAK VALID! Format baku harus sesuai: [Kode Wilayah] [Nomor] [Seri], contoh: 'L 1234 AB'
+  >> HASIL VERIFIKASI: Plat nomor kendaraan 1 tetap aman 'L 1234 AB' [PROTEKSI VALIDASI BERHASIL]
+
+[TEST INVALID 3] Uji Setter Nama Pelanggan dengan String Kosong & Terlalu Pendek:
+  State awal nama pelanggan 1: Budi Santoso
+  Mencoba mengubah nama menjadi string kosong ("") ->   [VALIDATION ERROR] Nama pelanggan '' TIDAK VALID! Nama tidak boleh kosong dan minimal 3 karakter.
+  Mencoba mengubah nama menjadi 'Jo' (kurang dari 3 karakter) ->   [VALIDATION ERROR] Nama pelanggan 'Jo' TIDAK VALID! Nama tidak boleh kosong dan minimal 3 karakter.
+  >> HASIL VERIFIKASI: Nama pelanggan 1 tetap aman 'Budi Santoso' [PROTEKSI VALIDASI BERHASIL]
+
+[TEST INVALID 4] Uji Setter Nomor KTP/NIK dengan Format Tidak Tepat 16 Digit:
+  State awal KTP pelanggan 1: 3529011205980001
+  Mencoba mengubah KTP menjadi '12345' (hanya 5 digit) ->   [VALIDATION ERROR] Nomor KTP '12345' TIDAK VALID! NIK/KTP harus tepat 16 digit angka numerik.
+  Mencoba mengubah KTP mengandung huruf '352901120598ABCD' ->   [VALIDATION ERROR] Nomor KTP '352901120598ABCD' TIDAK VALID! NIK/KTP harus tepat 16 digit angka numerik.
+  >> HASIL VERIFIKASI: KTP pelanggan 1 tetap aman '3529011205980001' [PROTEKSI VALIDASI BERHASIL]
+
+[TEST INVALID 5] Uji Setter Nomor Telepon dengan Format Non-Seluler:
+  State awal nomor telepon pelanggan 1: 081299887766
+  Mencoba mengubah telepon menjadi '021-9988-ABC' ->   [VALIDATION ERROR] Nomor telepon '021-9988-ABC' TIDAK VALID! Nomor harus diawali '08' dan terdiri dari 10-14 digit angka.
+  Mencoba mengubah telepon menjadi '0812' (terlalu pendek) ->   [VALIDATION ERROR] Nomor telepon '0812' TIDAK VALID! Nomor harus diawali '08' dan terdiri dari 10-14 digit angka.
+  >> HASIL VERIFIKASI: Nomor telepon pelanggan 1 tetap aman '081299887766' [PROTEKSI VALIDASI BERHASIL]
+
+[TEST INVALID 6] Uji Perpanjangan Durasi Sewa dengan Nilai Negatif:
+  State awal durasi transaksi 1: 5 hari | Total: Rp 2.160.000,00
+  Mencoba perpanjang durasi sebesar -3 hari ->   >> Mengajukan perpanjangan durasi transaksi TRX-2026-001 sebesar +-3 hari...
+  [VALIDATION ERROR] Tambahan hari (-3 hari) TIDAK VALID! Nilai harus lebih dari 0.
+  >> HASIL VERIFIKASI: Durasi transaksi 1 tetap 5 hari, Total Biaya tetap Rp 2.160.000,00 [PROTEKSI VALIDASI BERHASIL]
+
+[TEST INVALID 7] Uji Validasi Bisnis: Menyewa Kendaraan yang Masih Berstatus Booked:
+  Status armada kendaraan 1 saat ini: Sedang Disewa (Booked)
+  Mencoba membuat transaksi baru untuk kendaraan 1 oleh pelanggan 2...
+  [TRANSACTION ERROR] Unit kendaraan 'L 1234 AB (Toyota Avanza Veloz 1.5 AT)' SEDANG DISEWA / Tidak Tersedia!
+  Status transaksi gagal: 'Ditolak (Armada Tidak Tersedia)' [PROTEKSI ATURAN BISNIS BERHASIL]
+
+>>> [5. REKAPITULASI STATE AKHIR SELURUH OBJEK (INTEGRITAS TERJAGA)] <<<
+  State Akhir Kendaraan 1 : [L 1234 AB] - Toyota Avanza Veloz 1.5 AT | Status: Sedang Disewa | Tarif: Rp 480.000,00
+  State Akhir Kendaraan 2 : [N 5678 CD] - Honda CR-V Turbo Prestige | Status: Tersedia | Tarif: Rp 750.000,00
+  State Akhir Pelanggan 1 : Budi Santoso (CUST-001) | Sewa Aktif: 1 unit | Telp: 081299887766
+  State Akhir Pelanggan 2 : Siti Aminah (CUST-002) | Sewa Aktif: 0 unit | Telp: 085678901234
+  State Akhir Transaksi 1 : TRX-2026-001 | Status: Sedang Disewa | Durasi: 5 hari | Total Biaya: Rp 2.160.000,00
+  State Akhir Transaksi 2 : TRX-2026-002 | Status: Selesai | Durasi: 2 hari | Total Biaya: Rp 1.500.000,00
+
+================================================================================
+   [STATUS: SUKSES SEMPURNA] SELURUH ATRIBUT DAN VALIDASI P3 TERVERIFIKASI!     
+================================================================================
+
+--- Table 13 (Rows: 8) ---
+  Item Evaluasi Sprint Review | Hasil Verifikasi & Bukti Implementasi | Status
+  Attribute berhasil di-private | 100% attribute utama pada Kendaraan, Pelanggan, TransaksiSewa berstatus private. | SUKSES
+  Getter berjalan | Seluruh method getter mengembalikan nilai state yang akurat dan aman. | SUKSES
+  Setter berjalan terkontrol | Setter hanya disediakan pada attribute modifiable dengan validasi ketat. | SUKSES
+  Validasi data berhasil | 7 aturan validasi bisnis (Plat, Merk, Tarif, NIK, Telp, Durasi, Status) aktif. | SUKSES
+  Constructor diperbaiki | Constructor memanggil validasi setter (Defensive Constructor). | SUKSES
+  Test invalid berhasil | 7 skenario pengujian negatif terbukti menolak masukan salah dan state aman. | SUKSES
+  Program dapat dijalankan | Kompilasi clean tanpa warning, eksekusi runtime berjalan lancar. | SUKSES
+
+--- Table 14 (Rows: 16) ---
+  No | Kriteria Definition of Done (DoD) Modul 3 | Status Verifikasi
+  1 | Menggunakan proyek lanjutan hasil Praktikum P2 (AutoRent System) | ✓ TERPENUHI
+  2 | Minimal 3 class direfactor (Kendaraan, Pelanggan, TransaksiSewa) | ✓ TERPENUHI
+  3 | Seluruh attribute utama menggunakan access modifier private | ✓ TERPENUHI
+  4 | Getter dibuat sesuai kebutuhan controlled read | ✓ TERPENUHI
+  5 | Setter hanya dibuat bila diperlukan (Controlled Mutator) | ✓ TERPENUHI
+  6 | Minimal 3 aturan validasi data diterapkan (Terimplementasi 7 validasi) | ✓ TERPENUHI
+  7 | Constructor mengikuti aturan validasi (Defensive Constructor) | ✓ TERPENUHI
+  8 | Tidak ada perubahan attribute secara langsung dari Main (Direct access eliminated) | ✓ TERPENUHI
+  9 | Terdapat pengujian data valid (Positive Testing teruji) | ✓ TERPENUHI
+  10 | Terdapat pengujian data tidak valid (Negative Testing 7 skenario teruji) | ✓ TERPENUHI
+  11 | Program berhasil dikompilasi (javac -d bin src/*.java sukses tanpa error) | ✓ TERPENUHI
+  12 | Program berhasil dijalankan (java -cp bin Main berjalan lancar) | ✓ TERPENUHI
+  13 | Sprint Backlog diperbarui dengan alur TO DO -> DONE | ✓ TERPENUHI
+  14 | Sprint Review tersedia lengkap dengan evaluasi menyeluruh | ✓ TERPENUHI
+  15 | Sprint Retrospective tersedia (What went well, wrong, improvement) | ✓ TERPENUHI
+

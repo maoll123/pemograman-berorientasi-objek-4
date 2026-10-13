@@ -1,0 +1,264 @@
+================================================================================
+   PRAKTIKUM PEMROGRAMAN BERORIENTASI OBYEK - MODUL 4 (AGILE SPRINT P4)         
+   AutoRent System - Relasi Antarobjek: Association, Aggregation,               
+                     Composition, Dependency & Multiplicity                     
+   Penyusun: Ahmad Yasar Maulana Dais (NRP: 3125522018) | PENS PSDKU Sumenep    
+================================================================================
+
+>>> [1. PENGUJIAN RELASI KOMPOSISI: Kendaraan ?— Mesin] <<<
+Menginstansiasi 3 objek Kendaraan lengkap dengan komponen Mesin internalnya...
+
+Menampilkan informasi unit beserta spesifikasi mesin internal (Komposisi Part):
+  -------------------------------------------------------------
+  [Plat Nomor]     : L 1234 AB
+  [Merk / Tipe]    : Toyota Avanza Veloz 1.5 AT
+  [Jenis Armada]   : MPV
+  [Tarif Sewa/Hari]: Rp 400.000,00
+  [Status Unit]    : TERSEDIA (Ready)
+  -- Spesifikasi Mesin (Komposisi Part) --
+     [No. Rangka Mesin] : ENG-2NR-FE-9921
+     [Kapasitas Silinder]: 1496 cc
+     [Tipe Transmisi]   : Automatic (Default)
+     [Kesehatan Mesin]  : Prima (100%)
+  -------------------------------------------------------------
+  -------------------------------------------------------------
+  [Plat Nomor]     : N 5678 CD
+  [Merk / Tipe]    : Honda CR-V 1.5 Turbo Prestige
+  [Jenis Armada]   : SUV
+  [Tarif Sewa/Hari]: Rp 750.000,00
+  [Status Unit]    : TERSEDIA (Ready)
+  -- Spesifikasi Mesin (Komposisi Part) --
+     [No. Rangka Mesin] : ENG-L15BE-4412
+     [Kapasitas Silinder]: 1498 cc
+     [Tipe Transmisi]   : Automatic (Default)
+     [Kesehatan Mesin]  : Prima (100%)
+  -------------------------------------------------------------
+  -------------------------------------------------------------
+  [Plat Nomor]     : M 9900 EF
+  [Merk / Tipe]    : Mitsubishi Pajero Sport Dakar 4x4
+  [Jenis Armada]   : SUV
+  [Tarif Sewa/Hari]: Rp 900.000,00
+  [Status Unit]    : TERSEDIA (Ready)
+  -- Spesifikasi Mesin (Komposisi Part) --
+     [No. Rangka Mesin] : ENG-4N15-7733
+     [Kapasitas Silinder]: 2442 cc
+     [Tipe Transmisi]   : Automatic (Default)
+     [Kesehatan Mesin]  : Prima (100%)
+  -------------------------------------------------------------
+
+>>> [2. PENGUJIAN RELASI AGREGASI: GarasiArmada ?— Kendaraan] <<<
+Membuat objek GarasiArmada (Whole) dan mendaftarkan unit Kendaraan (Part)...
+
+  >> [AGREGASI: SUKSES] Unit L 1234 AB (Toyota Avanza Veloz 1.5 AT) berhasil ditambahkan ke Garasi Pusat Juanda Surabaya [1/3]
+  >> [AGREGASI: SUKSES] Unit N 5678 CD (Honda CR-V 1.5 Turbo Prestige) berhasil ditambahkan ke Garasi Pusat Juanda Surabaya [2/3]
+  >> [AGREGASI: SUKSES] Unit M 9900 EF (Mitsubishi Pajero Sport Dakar 4x4) berhasil ditambahkan ke Garasi Pusat Juanda Surabaya [3/3]
+
+Menampilkan daftar armada dalam Garasi Pusat Surabaya:
+  =============================================================
+   INVENTARIS GARASI ARMADA: GARASI PUSAT JUANDA SURABAYA (GAR-SBY-01)
+   Lokasi Cabang : Surabaya | Kapasitas: 3/3 Unit
+   Status Unit   : 3 Unit Ready | 0 Unit Sedang Disewa
+  =============================================================
+   1. [L 1234 AB] Toyota Avanza Veloz 1.5 AT   | Rp 400.000,00/hari | READY (Tersedia)
+   2. [N 5678 CD] Honda CR-V 1.5 Turbo Prestige | Rp 750.000,00/hari | READY (Tersedia)
+   3. [M 9900 EF] Mitsubishi Pajero Sport Dakar 4x4 | Rp 900.000,00/hari | READY (Tersedia)
+  =============================================================
+
+>>> [3. PENGUJIAN RELASI ASOSIASI: Pelanggan — TransaksiSewa — Kendaraan] <<<
+Menginstansiasi 2 objek Pelanggan dan membuat Transaksi Sewa pertama...
+
+  -------------------------------------------------------------
+  [ID Pelanggan]      : CUST-001
+  [Nama Lengkap]      : Budi Santoso
+  [Nomor KTP / NIK]   : 3529011205980001
+  [Nomor Telepon]     : 081234567890
+  [Unit Sedang Disewa]: 0 unit
+  [Sisa Kuota Sewa]   : 2 unit (Max: 2)
+  [Status Hak Sewa]   : DIIZINKAN SEWA
+  -------------------------------------------------------------
+  -------------------------------------------------------------
+  [ID Pelanggan]      : CUST-002
+  [Nama Lengkap]      : Siti Aminah
+  [Nomor KTP / NIK]   : 3529022308990002
+  [Nomor Telepon]     : 085678901234
+  [Unit Sedang Disewa]: 0 unit
+  [Sisa Kuota Sewa]   : 2 unit (Max: 2)
+  [Status Hak Sewa]   : DIIZINKAN SEWA
+  -------------------------------------------------------------
+
+Membuat Transaksi Sewa TRX-2026-001 (Budi Santoso menyewa Avanza Veloz selama 3 hari)...
+  >> [Kendaraan L 1234 AB] Status armada berhasil diubah: SEDANG DISEWA (Booked)
+  >> [Pelanggan CUST-001] Transaksi sewa disetujui +1 unit. Total sewa aktif: 1/2
+  >> [SUKSES] Transaksi TRX-2026-001 berhasil dibuat. Unit L 1234 AB dipinjam oleh Budi Santoso
+
+Membuat Transaksi Sewa TRX-2026-002 (Siti Aminah menyewa Honda CR-V selama 2 hari)...
+  >> [Kendaraan N 5678 CD] Status armada berhasil diubah: SEDANG DISEWA (Booked)
+  >> [Pelanggan CUST-002] Transaksi sewa disetujui +1 unit. Total sewa aktif: 1/2
+  >> [SUKSES] Transaksi TRX-2026-002 berhasil dibuat. Unit N 5678 CD dipinjam oleh Siti Aminah
+
+>>> [4. PENGUJIAN KOMPOSISI TAHAP 2: TransaksiSewa ?— DetailItemBiaya] <<<
+Menambahkan paket layanan ekstra (Add-On items) ke dalam Transaksi 1 (Komposisi Part)...
+
+  >> [KOMPOSISI: PART ADDED] Layanan 'Asuransi All-Risk Executive' ditambahkan ke Transaksi TRX-2026-001 (Total Baru: Rp 1.350.000,00)
+  >> [KOMPOSISI: PART ADDED] Layanan 'Layanan Driver Profesional' ditambahkan ke Transaksi TRX-2026-001 (Total Baru: Rp 1.800.000,00)
+  >> [KOMPOSISI: PART ADDED] Layanan 'GPS Tracker & Child Car Seat' ditambahkan ke Transaksi TRX-2026-001 (Total Baru: Rp 1.875.000,00)
+
+Melakukan perpanjangan durasi sewa Transaksi 1 sebesar +2 hari:
+  >> Mengajukan perpanjangan durasi transaksi TRX-2026-001 sebesar +2 hari...
+  >> [SUKSES] Perpanjangan sewa disetujui. Total durasi: 5 hari | Total biaya akhir: Rp 2.675.000,00
+
+Menampilkan rincian item biaya Transaksi 1:
+      1. Sewa Armada Pokok (Toyota Avanza Veloz 1.5 AT) |  3 unit/hari x Rp 400.000,00 = Rp 1.200.000,00
+      2. Asuransi All-Risk Executive      |  3 unit/hari x Rp  50.000,00 = Rp   150.000,00
+      3. Layanan Driver Profesional       |  3 unit/hari x Rp 150.000,00 = Rp   450.000,00
+      4. GPS Tracker & Child Car Seat     |  3 unit/hari x Rp  25.000,00 = Rp    75.000,00
+      5. Perpanjangan Sewa Armada         |  2 unit/hari x Rp 400.000,00 = Rp   800.000,00
+   TOTAL AKUMULASI BIAYA TRANSAKSI 1: Rp 2.675.000,00
+
+>>> [5. PENGUJIAN RELASI DEPENDENCY: TransaksiSewa ? KuitansiPrinter & LayananNotifikasi] <<<
+Menginstansiasi service pendukung sementara (transient helper objects)...
+
+Mencetak kuitansi resmi Transaksi 1 melalui KuitansiPrinter (Dependency):
+  >> [DEPENDENCY EXECUTION] Mengoper objek TransaksiSewa ke KuitansiPrinter...
+
+  =======================================================================
+                     AUTORENT SYSTEM - OFFICIAL RECEIPT                  
+               Pusat Rental & Manajemen Armada Kendaraan Modern           
+  =======================================================================
+   Device Printer : Epson TM-T88VI (Thermal High-Speed POS)
+   Petugas Kasir  : Rina Amelia (Kasir)
+   No. Transaksi  : TRX-2026-001
+   Tanggal Sewa   : 18-09-2026
+   Status Transaksi: Sedang Disewa
+  -----------------------------------------------------------------------
+   [DATA PENYEWA]
+   Nama Lengkap   : Budi Santoso (ID: CUST-001)
+   No. Kontak / WA: 081234567890
+   NIK KTP        : 3529011205980001
+   [DATA ARMADA]
+   Unit Kendaraan : Toyota Avanza Veloz 1.5 AT [MPV]
+   Plat Nomor     : L 1234 AB
+   Tarif Harian   : Rp 400.000,00
+   Mesin / Transm.: ENG-2NR-FE-9921 (Automatic (Default))
+  -----------------------------------------------------------------------
+   [RINCIAN ITEM BIAYA (KOMPOSISI PART)]
+      1. Sewa Armada Pokok (Toyota Avanza Veloz 1.5 AT) |  3 unit/hari x Rp 400.000,00 = Rp 1.200.000,00
+      2. Asuransi All-Risk Executive      |  3 unit/hari x Rp  50.000,00 = Rp   150.000,00
+      3. Layanan Driver Profesional       |  3 unit/hari x Rp 150.000,00 = Rp   450.000,00
+      4. GPS Tracker & Child Car Seat     |  3 unit/hari x Rp  25.000,00 = Rp    75.000,00
+      5. Perpanjangan Sewa Armada         |  2 unit/hari x Rp 400.000,00 = Rp   800.000,00
+  -----------------------------------------------------------------------
+   TOTAL PEMBAYARAN: Rp 2.675.000,00
+  =======================================================================
+          Terima kasih telah mempercayakan perjalanan Anda bersama kami!  
+  =======================================================================
+
+
+Memproses pengembalian armada Transaksi 2 (Terlambat 2 Hari) dengan integrasi notifikasi:
+  >> Memproses pengembalian kendaraan untuk Transaksi TRX-2026-002...
+  >> [Kendaraan N 5678 CD] Status armada berhasil diubah: TERSEDIA (Ready)
+  >> [Pelanggan CUST-002] Pengembalian tercatat -1 unit. Sisa sewa aktif: 0/2
+  >> [SUKSES] Unit kendaraan N 5678 CD (Honda CR-V 1.5 Turbo Prestige) berhasil dikembalikan.
+     [Status Keterlambatan] : Terlambat 2 hari
+     [Denda Dikenakan]      : Rp 100.000,00 (Rp 50.000 / hari)
+     [Total Tagihan Akhir]  : Rp 1.600.000,00
+  >> [DEPENDENCY EXECUTION] Memanggil LayananNotifikasi untuk notifikasi pengembalian...
+  >> [NOTIFIKASI GATEWAY (AutoRent WhatsApp Cloud API)]
+     Tujuan: 085678901234 (Siti Aminah)
+     Pesan : Terima kasih Siti Aminah! Unit N 5678 CD telah berhasil dikembalikan. Tercatat keterlambatan 2 hari dengan denda Rp 100.000,00. Transaksi TRX-2026-002 resmi SELESAI.
+  >> [DEPENDENCY EXECUTION] Mengoper objek TransaksiSewa ke KuitansiPrinter...
+
+  =======================================================================
+                     AUTORENT SYSTEM - OFFICIAL RECEIPT                  
+               Pusat Rental & Manajemen Armada Kendaraan Modern           
+  =======================================================================
+   Device Printer : Epson TM-T88VI (Thermal High-Speed POS)
+   Petugas Kasir  : Rina Amelia (Kasir)
+   No. Transaksi  : TRX-2026-002
+   Tanggal Sewa   : 18-09-2026
+   Status Transaksi: Selesai
+  -----------------------------------------------------------------------
+   [DATA PENYEWA]
+   Nama Lengkap   : Siti Aminah (ID: CUST-002)
+   No. Kontak / WA: 085678901234
+   NIK KTP        : 3529022308990002
+   [DATA ARMADA]
+   Unit Kendaraan : Honda CR-V 1.5 Turbo Prestige [SUV]
+   Plat Nomor     : N 5678 CD
+   Tarif Harian   : Rp 750.000,00
+   Mesin / Transm.: ENG-L15BE-4412 (Automatic (Default))
+  -----------------------------------------------------------------------
+   [RINCIAN ITEM BIAYA (KOMPOSISI PART)]
+      1. Sewa Armada Pokok (Honda CR-V 1.5 Turbo Prestige) |  2 unit/hari x Rp 750.000,00 = Rp 1.500.000,00
+      2. Denda Keterlambatan (2 Hari)     |  2 unit/hari x Rp  50.000,00 = Rp   100.000,00
+  -----------------------------------------------------------------------
+   TOTAL PEMBAYARAN: Rp 1.600.000,00
+  =======================================================================
+          Terima kasih telah mempercayakan perjalanan Anda bersama kami!  
+  =======================================================================
+
+
+================================================================================
+>>> [6. PEMBUKTIAN KARAKTERISTIK LIFECYCLE: AGREGASI VS KOMPOSISI] <<<
+================================================================================
+
+[A. PEMBUKTIAN SIFAT AGREGASI (GarasiArmada ?— Kendaraan)]
+Kondisi Awal Garasi Surabaya: Total 3 unit armada.
+  >> [AGREGASI PROOF] Mengosongkan seluruh armada dari Garasi Pusat Juanda Surabaya...
+  >> Garasi Garasi Pusat Juanda Surabaya kini kosong, namun objek-objek Kendaraan di luar garasi tetap aktif!
+Status Garasi Surabaya setelah dikosongkan: 0 unit.
+Memeriksa apakah objek Kendaraan 1 dan Kendaraan 3 masih hidup di memori:
+  >> Kendaraan 1 Plat: L 1234 AB | Merk: Toyota Avanza Veloz 1.5 AT | Status: Sedang Disewa
+  >> Kendaraan 3 Plat: M 9900 EF | Merk: Mitsubishi Pajero Sport Dakar 4x4 | Status: Tersedia
+  >> [AGREGASI: SUKSES] Unit M 9900 EF (Mitsubishi Pajero Sport Dakar 4x4) berhasil ditambahkan ke Garasi Cabang Kota Malang [1/5]
+  >> [BUKTI AGREGASI VALID] Unit M 9900 EF berhasil dipindah ke Garasi Cabang Kota Malang
+
+[B. PEMBUKTIAN SIFAT KOMPOSISI (Kendaraan ?— Mesin & TransaksiSewa ?— DetailItemBiaya)]
+Objek Mesin dan DetailItemBiaya tidak dapat diciptakan atau dipindahkan secara bebas tanpa induknya.
+  >> No Rangka Mesin Kendaraan 1: ENG-2NR-FE-9921 (Terkunci pada L 1234 AB)
+  >> Rincian Item Transaksi 1 berjumlah 5 item, terikat mutlak pada TRX-2026-001
+
+================================================================================
+>>> [7. PENGUJIAN DATA TIDAK VALID (NEGATIVE TESTING & VALIDATION DEFENSE)] <<<
+Menguji ketahanan arsitektur terhadap kondisi batas dan pelanggaran aturan bisnis...
+================================================================================
+
+[TEST INVALID 1] Uji Kapasitas Garasi Penuh (Overflow Defense):
+  >> [AGREGASI: SUKSES] Unit L 1234 AB (Toyota Avanza Veloz 1.5 AT) berhasil ditambahkan ke Garasi Pos Satelit [1/1]
+Mencoba menambahkan unit kedua ke garasi berkapasitas 1 unit ->   [GARASI ERROR] Garasi Garasi Pos Satelit sudah PENUH! (Kapasitas Max: 1)
+
+[TEST INVALID 2] Uji Asosiasi: Menyewa Kendaraan yang Sedang Disewa (Booked):
+Status unit L 1234 AB saat ini: SEDANG DISEWA
+Mencoba membuat transaksi baru untuk kendaraan 1 oleh pelanggan 2 ->   [TRANSACTION ERROR] Unit 'L 1234 AB (Toyota Avanza Veloz 1.5 AT)' SEDANG DISEWA / Tidak Tersedia!
+Status Transaksi Gagal: 'Ditolak (Armada Tidak Tersedia)' [PROTEKSI BISNIS BERHASIL]
+
+[TEST INVALID 3] Uji Multiplicity: Pelanggan Mencapai Kuota Maksimal Sewa:
+Sewa aktif Budi Santoso saat ini: 1/2 unit
+  >> [Kendaraan M 9900 EF] Status armada berhasil diubah: SEDANG DISEWA (Booked)
+  >> [Pelanggan CUST-001] Transaksi sewa disetujui +1 unit. Total sewa aktif: 2/2
+  >> [SUKSES] Transaksi TRX-2026-003 berhasil dibuat. Unit M 9900 EF dipinjam oleh Budi Santoso
+Sewa aktif Budi Santoso setelah transaksi kedua: 2/2 unit (KUOTA PENUH)
+Mencoba membuat transaksi ketiga untuk Budi Santoso ->   [TRANSACTION ERROR] Pelanggan 'Budi Santoso' telah mencapai batas kuota maksimal sewa (2 unit)!
+Status Transaksi Gagal: 'Ditolak (Kuota Pelanggan Penuh)' [PROTEKSI KUOTA BERHASIL]
+
+[TEST INVALID 4] Uji Perpanjangan Durasi Negatif pada Transaksi:
+Mencoba memperpanjang Transaksi 1 sebesar -5 hari ->   >> Mengajukan perpanjangan durasi transaksi TRX-2026-001 sebesar +-5 hari...
+  [VALIDATION ERROR] Tambahan hari (-5 hari) TIDAK VALID! Nilai harus lebih dari 0.
+
+[TEST INVALID 5] Uji Penanganan Objek NULL (Null Safety Defense):
+Mencoba membuat transaksi dengan Objek Kendaraan NULL ->   [TRANSACTION ERROR] Objek Kendaraan tidak boleh NULL!
+
+================================================================================
+>>> [8. REKAPITULASI STATE AKHIR SELURUH OBJEK SISTEM AUTORENT] <<<
+================================================================================
+  1. Kendaraan 1 : [L 1234 AB] Toyota Avanza Veloz 1.5 AT | Status: Sedang Disewa | Mesin: ENG-2NR-FE-9921
+  2. Kendaraan 2 : [N 5678 CD] Honda CR-V 1.5 Turbo Prestige | Status: Tersedia | Mesin: ENG-L15BE-4412
+  3. Kendaraan 3 : [M 9900 EF] Mitsubishi Pajero Sport Dakar 4x4 | Status: Sedang Disewa | Mesin: ENG-4N15-7733
+  4. Pelanggan 1 : Budi Santoso (CUST-001) | Sewa Aktif: 2/2 unit | Telp: 081234567890
+  5. Pelanggan 2 : Siti Aminah (CUST-002) | Sewa Aktif: 0/2 unit | Telp: 085678901234
+  6. Transaksi 1 : TRX-2026-001 | Status: Sedang Disewa | Total Biaya: Rp 2.675.000,00 (5 Item Biaya)
+  7. Transaksi 2 : TRX-2026-002 | Status: Selesai | Total Biaya: Rp 1.600.000,00 (2 Item Biaya)
+
+================================================================================
+   [STATUS: SUKSES SEMPURNA] SELURUH RELASI DAN BUSINESS RULES P4 TERVERIFIKASI! 
+================================================================================
